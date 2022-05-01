@@ -1,0 +1,32 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // rest api 구현을 위한 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    // JPA(Java Persistence API) 관련 기능들을 사용하기 위한 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // 서버를 구현하기 위해 In-Memory 관계형 데이터베이스인 h2 DB를 사용하기 위한 라이브러리
+    runtimeOnly 'com.h2database:h2'
+
+    // lombok은 라이브러리를 추가하고 바로 사용할 수 있는 것이 아니라, intellij에서 몇가지 설정을
+    // 추가해줘야 한다. => plugin 검색 후 다운.
+    annotationProcessor "org.projectlombok:lombok:1.18.20"
+    compileOnly "org.projectlombok:lombok:1.18.20"
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+test {
+    useJUnitPlatform()
+}
