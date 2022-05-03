@@ -1,6 +1,6 @@
 package observer;
 
-public class ButtonTest {
+public class ObserverTest {
     public static void main(String[] args) {
         Button button = new Button("버튼");
         button.addListener(new IButtonListener() {

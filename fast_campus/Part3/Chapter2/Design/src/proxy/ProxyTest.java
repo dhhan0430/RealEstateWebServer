@@ -1,6 +1,6 @@
 package proxy;
 
-public class BrowserTest {
+public class ProxyTest {
     public static void main(String[] args) {
         /*
         Browser browser = new Browser("www.naver.com");

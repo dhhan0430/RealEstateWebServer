@@ -1,6 +1,6 @@
 package decorator;
 
-public class CarTest {
+public class DecoratorTest {
     public static void main(String[] args) {
 
         ICar audi = new Audi(1000);
