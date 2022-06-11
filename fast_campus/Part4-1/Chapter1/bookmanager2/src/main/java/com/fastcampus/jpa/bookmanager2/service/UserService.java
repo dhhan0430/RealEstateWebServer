@@ -77,8 +77,8 @@ public class UserService {
         entityManager.remove(user1);
 
         // 위에서 제거했기 때문에 당연히 에러 발생한다.
-        user1.setName("new_martin");
-        entityManager.merge(user1);
+//        user1.setName("new_martin");
+//        entityManager.merge(user1);
 
     }
 

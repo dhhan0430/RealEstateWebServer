@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,6 +22,12 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 // @EntityListeners(value = AuditingEntityListener.class)
+// isolation 에서 uncommitted_read 일 때, 1st tx, 2nd tx 중 2nd tx가 1번 field를
+// 변경했는데 그 이후 1st 가 해당 entity를 읽어와서 2번 field를 변경하고 save했을 때,
+// 2nd tx가 롤백하더라도 롤백이 적용되지 않고, 1st 가 2번 field를 변경했더라도, 2nd 가
+// 변경한 1번 field 내용이 같이 커밋된다. 이 때 @DynamicUpdate를 쓰면 1st 가 save할 때
+// 자신이 변경한 2번 field 만 update 쿼리로 db에 날라가게 된다.
+// @DynamicUpdate
 public class Book extends BaseEntity {
 
     @Id
