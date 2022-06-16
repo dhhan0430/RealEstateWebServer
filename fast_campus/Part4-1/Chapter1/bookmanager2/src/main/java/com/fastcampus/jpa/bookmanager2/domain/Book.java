@@ -1,11 +1,14 @@
 package com.fastcampus.jpa.bookmanager2.domain;
 
+import com.fastcampus.jpa.bookmanager2.domain.converter.BookStatusConverter;
 import com.fastcampus.jpa.bookmanager2.domain.listener.Auditable;
+import com.fastcampus.jpa.bookmanager2.repository.dto.BookStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,6 +31,8 @@ import java.util.List;
 // 변경한 1번 field 내용이 같이 커밋된다. 이 때 @DynamicUpdate를 쓰면 1st 가 save할 때
 // 자신이 변경한 2번 field 만 update 쿼리로 db에 날라가게 된다.
 // @DynamicUpdate
+// SoftDelete를 위함 => book 엔티티에 대한 쿼리메서드에 항상 false 가 붙어서 실행됨.
+@Where(clause = "deleted = false")
 public class Book extends BaseEntity {
 
     @Id
@@ -70,7 +75,9 @@ public class Book extends BaseEntity {
     @ToString.Exclude
     private List<Review> reviews = new ArrayList<>();
 
-    @ManyToOne
+    // book 엔티티가 persist가 될 때, publisher 도 같이 persist 실행해라.
+    @ManyToOne(cascade =
+            { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
     // @JoinColumn(name = "publisher_id")
     @ToString.Exclude
     private Publisher publisher;
@@ -93,6 +100,30 @@ public class Book extends BaseEntity {
     @JoinColumn(name = "book_id")
     @ToString.Exclude
     private List<BookAndAuthor> bookAndAuthors = new ArrayList<>();
+
+    private boolean deleted;
+
+
+    // 아래는 코드로 이루어진 데이터.
+    // 코드로 이루어진 데이터를 직접 활용하는 것은 orm 측면에서 좀 어긋났다고 볼 수 있다.
+    // => 좀 더 의미가 있는 형태의 객체로 만들기 위해, BookStatus 라는 클래스를 만든다.
+    /*
+    private int status; // 판매 상태
+
+    public boolean isDisplayed() {
+        return status == 200;
+    }
+    */
+
+    // autoApply 적용하면 아래 Converter 적용 안해줘도 된다.
+    // 또한, autoApply는 IntegerConverter, StringConverter 이런 컨버터 만들어서
+    // 적용하면 안된다. 꼭 개발자가 생성한 클래스에 한에서 활용해야 한다.
+    // 그렇지 않으면, 모든 varchar 타입, 모든 number 타입의 컬럼들은 해당 컨버터를
+    // 타게 된다. 그래서 이런 제네럴한 타입은 autoApply 끄고, Convert Annotation을
+    // 각 field에 적용하여 필요한 field만 컨버터를 타도록 한다.
+    // @Convert(converter = BookStatusConverter.class)
+    private BookStatus status;
+
 
     public void addBookAndAuthors(BookAndAuthor... bookAndAuthors) {
         Collections.addAll(this.bookAndAuthors, bookAndAuthors);
