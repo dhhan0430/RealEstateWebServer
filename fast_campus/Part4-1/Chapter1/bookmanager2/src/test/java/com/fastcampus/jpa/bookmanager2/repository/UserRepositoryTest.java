@@ -1,5 +1,6 @@
 package com.fastcampus.jpa.bookmanager2.repository;
 
+import com.fastcampus.jpa.bookmanager2.domain.Address;
 import com.fastcampus.jpa.bookmanager2.domain.Gender;
 import com.fastcampus.jpa.bookmanager2.domain.User;
 import com.fastcampus.jpa.bookmanager2.domain.UserHistory;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,10 @@ class UserRepositoryTest {
 
     @Autowired
     private UserHistoryRepository userHistoryRepository;
+
+    @Autowired
+    private EntityManager entityManager;
+
 
     @Test
     // @Transactional
@@ -323,5 +329,55 @@ class UserRepositoryTest {
         System.out.println("----------------------------------------");
         System.out.println("UserHistory.getUser(): "
                 + userHistoryRepository.findAll().get(0).getUser());
+    }
+
+
+    @Test
+    void embedTest() {
+        userRepository.findAll().forEach(System.out::println);
+
+        User user = new User();
+        user.setName("steve");
+        user.setHomeAddress(
+                new Address(
+                        "서울시",
+                        "강남구",
+                        "강남대로 364 마왕빌딩",
+                        "06241"
+                )
+        );
+        user.setCompanyAddress(
+                new Address(
+                        "서울시",
+                        "성동구",
+                        "성수이로 113 제강빌딩",
+                        "04794"
+                )
+        );
+        userRepository.save(user);
+
+        User user1 = new User();
+        user1.setName("joshua");
+        user1.setHomeAddress(null);
+        user1.setCompanyAddress(null);
+        userRepository.save(user1);
+
+        User user2 = new User();
+        user2.setName("jordan");
+        user2.setHomeAddress(new Address());
+        user2.setCompanyAddress(new Address());
+        userRepository.save(user2);
+
+        // 여기서 영속성 컨텍스트의 캐시를 clear 해주면, joshua와 jordan은 캐시에서
+        // 가져오는 것이 아니라, db에서 다시 조회를 해서 데이터를 처리하게 된다.
+        entityManager.clear();
+
+        userRepository.findAll().forEach(System.out::println);
+        userHistoryRepository.findAll().forEach(System.out::println);
+
+        userRepository.findAllRawRecode().forEach(
+                a -> System.out.println(a.values())
+        );
+
     }
 }

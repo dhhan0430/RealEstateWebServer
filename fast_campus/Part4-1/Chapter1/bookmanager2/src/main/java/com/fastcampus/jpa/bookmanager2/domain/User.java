@@ -71,6 +71,34 @@ public class User extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
+    /*
+    private String city;
+    private String district;
+    private String detail;
+    private String zipCode;
+    */
+
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "city", column = @Column(name = "home_city")),
+        @AttributeOverride(name = "district", column = @Column(name = "home_district")),
+        @AttributeOverride(name = "detail", column = @Column(name = "home_address_detail")),
+        @AttributeOverride(name = "zipCode", column = @Column(name = "home_zip_code"))
+
+    })
+    private Address homeAddress;
+
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "city", column = @Column(name = "company_city")),
+        @AttributeOverride(name = "district", column = @Column(name = "company_district")),
+        @AttributeOverride(name = "detail", column = @Column(name = "company_address_detail")),
+        @AttributeOverride(name = "zipCode", column = @Column(name = "company_zip_code"))
+
+    })
+    private Address companyAddress;
+
+
     // 여기 @OneToMany 에서는 참조되는 값을 One에서 가지고 있지 않다.
     // One 에 해당 하는 PK 를 Many 쪽에서 FK 로 가지고 있게 된다.
     // 즉 여기선, UserHistory 테이블에서 User의 id 값을 FK 로 가지고 있게 된다.
@@ -95,6 +123,7 @@ public class User extends BaseEntity {
     @JoinColumn(name = "user_id") // OneToMany는 매핑 테이블 생성된다.
     @ToString.Exclude
     private List<Review> reviews = new ArrayList<>();
+
 
     /*
     @Column(updatable = false) // update할 때 해당 필드 반영 안함

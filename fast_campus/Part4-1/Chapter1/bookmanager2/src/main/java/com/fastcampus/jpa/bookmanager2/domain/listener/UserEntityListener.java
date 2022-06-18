@@ -36,6 +36,8 @@ public class UserEntityListener {
 
         // UserHistory 에 @ManyToOne 추가로 인함.
         userHistory.setUser(user);
+        userHistory.setHomeAddress(user.getHomeAddress());
+        userHistory.setCompanyAddress(user.getCompanyAddress());
 
         userHistoryRepository.save(userHistory);
 
