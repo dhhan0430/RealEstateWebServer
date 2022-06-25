@@ -1,10 +1,10 @@
-package dh.realestimate;
+package dh.realestate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RealEstimateApplicationTests {
+class RealEstateApplicationTests {
 
 	@Test
 	void contextLoads() {
