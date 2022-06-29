@@ -7,13 +7,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
 class MolitCodeTest {
-
 
     @Test
     public void molitCodeTest() throws FileNotFoundException, UnsupportedEncodingException {
 
         MolitCode.codeSearch("서초구");
     }
+
 }

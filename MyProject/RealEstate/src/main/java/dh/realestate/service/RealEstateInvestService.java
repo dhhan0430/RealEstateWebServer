@@ -21,22 +21,22 @@ public class RealEstateInvestService {
     private final KakaoMapClient kakaoMapClient;
 
 
-    public RealEstateDto search(String region,
-                                String type,
-                                Integer lowPrice,
-                                Integer highPrice,
-                                Integer buildingYear)
-            throws FileNotFoundException, UnsupportedEncodingException {
-
-        // 예외 처리
-
-        // input parameter: 1.region, 2.type
-        List = MolitClient.searchRealEstate(region, type);
-
-
-
-
-
-    }
+//    public RealEstateDto search(String region,
+//                                String type,
+//                                Integer lowPrice,
+//                                Integer highPrice,
+//                                Integer buildingYear)
+//            throws FileNotFoundException, UnsupportedEncodingException {
+//
+//        // 예외 처리
+//
+//        // input parameter: 1.region, 2.type
+//        List = MolitClient.searchRealEstate(region, type);
+//
+//
+//
+//
+//
+//    }
 
 }

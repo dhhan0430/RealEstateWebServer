@@ -1,21 +1,19 @@
 package dh.realestate.service.molit.dto;
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class MolitRealEstateReq {
 
-    @Value("${Molit.ServiceKey}")
+    @NonNull
     private String serviceKey;
     @NonNull
     private String regionCode;
-    @Value("${Molit.DealDate}")
+    @NonNull
     private String dealDate;
 
     public MultiValueMap<String, String> toMultiValueMap() {

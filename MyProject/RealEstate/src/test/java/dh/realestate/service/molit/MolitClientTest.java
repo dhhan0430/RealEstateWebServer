@@ -1,5 +1,6 @@
 package dh.realestate.service.molit;
 
+import dh.realestate.service.molit.dto.MolitRealEstateRes;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +19,8 @@ class MolitClientTest {
     @Test
     public void molitServiceTest() throws FileNotFoundException, UnsupportedEncodingException {
 
-        molitClient.searchRealEstate("서초구", "아파트");
+        MolitRealEstateRes result = molitClient.searchRealEstate("서초구", "아파트");
+        System.out.println(result);
     }
 
 }

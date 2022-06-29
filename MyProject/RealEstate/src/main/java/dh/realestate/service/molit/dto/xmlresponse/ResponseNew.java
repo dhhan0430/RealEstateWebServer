@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Response {
+public class ResponseNew {
     private Header header;
     private Body body;
 }

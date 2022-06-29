@@ -1,6 +1,0 @@
-Molit:
-  ServiceKey: afirxQFMzYfudfpCPw5F%2Bu19%2FlGBaq%2FBVMERCGqF6jWZs78Ru5urycXEXhe9SoALKV%2Blts9z0XijRLwq5dMeCw%3D%3D
-  DealDate: 202205
-  URL:
-    Apartment: http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade
-    Villa: http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade
