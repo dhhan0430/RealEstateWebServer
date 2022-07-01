@@ -22,10 +22,11 @@ public class ApiController {
 //                                @RequestParam String type,
 //                                @RequestParam Integer lowPrice,
 //                                @RequestParam Integer highPrice,
-//                                @RequestParam Integer buildingYear) {
+//                                @RequestParam Integer lowYear,
+//                                @RequestParam Integer highYear) {
 //
 //        return realEstateInvestService.search(
-//                region, type, lowPrice, highPrice, buildingYear);
+//                region, type, lowPrice, highPrice, lowYear, highYear);
 //    }
 //
 //    @PostMapping("/add")

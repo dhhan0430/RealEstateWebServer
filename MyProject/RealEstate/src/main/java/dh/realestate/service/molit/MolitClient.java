@@ -15,12 +15,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 @Component
 public class MolitClient {
@@ -47,7 +50,7 @@ public class MolitClient {
         }
 
         // Region Code 찾기
-        var regionCode = MolitCode.codeSearch(region);
+        var regionCode = codeSearch(region);
         if (regionCode == null) {
             // throw
         }
@@ -78,6 +81,28 @@ public class MolitClient {
 
         return XmlParser.parse(responseEntity.getBody());
 
+    }
+
+    public String codeSearch(String region)
+            throws FileNotFoundException, UnsupportedEncodingException {
+
+        var filePath = "src/main/resources/rs_code.txt";
+        var doc = new InputStreamReader(new FileInputStream(filePath),"EUC-KR");
+        Scanner obj = new Scanner(doc);
+        String line, code;
+        String[] arr;
+
+        while (obj.hasNextLine()) {
+            line = obj.nextLine();
+            arr = line.split("\t", 3)[1].split(" ");
+
+            if (arr.length == 2 && arr[1].equals(region)) {
+                code = line.split("\t", 3)[0].substring(0,5);
+                return code;
+            }
+        }
+
+        return null;
     }
 
 

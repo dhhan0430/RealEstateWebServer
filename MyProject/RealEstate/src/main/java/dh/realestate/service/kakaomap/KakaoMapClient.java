@@ -1,8 +1,13 @@
 package dh.realestate.service.kakaomap;
 
 import dh.realestate.ApplicationContextProvider;
+import dh.realestate.service.kakaomap.dto.KakaoMapCategoryReq;
+import dh.realestate.service.kakaomap.dto.KakaoMapCategoryRes;
+import dh.realestate.service.kakaomap.dto.KakaoMapCoordinateReq;
 import dh.realestate.service.kakaomap.dto.KakaoMapCoordinateRes;
-import dh.realestate.service.molit.MolitCode;
+import dh.realestate.service.kakaomap.url.IKakaoMapUrl;
+import dh.realestate.service.kakaomap.url.KakaoMapCategoryUrl;
+import dh.realestate.service.kakaomap.url.KakaoMapCoordinateUrl;
 import dh.realestate.service.molit.dto.MolitRealEstateReq;
 import dh.realestate.service.molit.dto.MolitRealEstateRes;
 import dh.realestate.service.molit.dto.xmlresponse.XmlParser;
@@ -14,6 +19,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -31,57 +37,61 @@ public class KakaoMapClient {
 
     public KakaoMapCoordinateRes convertAddressToCoordinate(String address) {
 
+        IKakaoMapUrl iKakaoMapUrl = ApplicationContextProvider.getContext()
+                .getBean(KakaoMapCoordinateUrl.class);
 
-    }
-
-    public MolitRealEstateRes searchRealEstate(String region, String type)
-            throws FileNotFoundException, UnsupportedEncodingException {
-
-        IMolitUrl iMolitUrl = null;
-        if (type.equals("아파트")) {
-            iMolitUrl = ApplicationContextProvider.getContext()
-                    .getBean(MolitApartUrl.class);
-        }
-        else if (type.equals("빌라")) {
-            iMolitUrl = ApplicationContextProvider.getContext()
-                    .getBean(MolitVillaUrl.class);
-        }
-        else {
-            // throw
-        }
-
-        // Region Code 찾기
-        var regionCode = MolitCode.codeSearch(region);
-        if (regionCode == null) {
-            // throw
-        }
-
-        System.out.println(iMolitUrl.getUrl());
-
-        var molitRealEstateReq = new MolitRealEstateReq(serviceKey, regionCode, dealDate);
+        var kakaoMapCoordinateReq = new KakaoMapCoordinateReq(address);
 
         var uri = UriComponentsBuilder
-                .fromUriString(iMolitUrl.getUrl())
-                .queryParams(molitRealEstateReq.toMultiValueMap())
-                .build(true).toUri();
+                .fromUriString(iKakaoMapUrl.getUrl())
+                .queryParams(kakaoMapCoordinateReq.toMultiValueMap())
+                .build(false).encode().toUri();
 
         var headers = new HttpHeaders();
+        headers.set("Authorization", authorization);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         var httpEntity = new HttpEntity<>(headers);
-        var responseType = new ParameterizedTypeReference<String>(){};
+        var responseType = new ParameterizedTypeReference<KakaoMapCoordinateRes>(){};
 
-        var restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters()
-                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        var responseEntity = new RestTemplate().exchange(
+            uri,
+            HttpMethod.GET,
+            httpEntity,
+            responseType
+        );
 
-        var responseEntity = restTemplate.exchange(
+        return responseEntity.getBody();
+    }
+
+    public KakaoMapCategoryRes searchNearby(
+            String category_group_code, String x, String y, Integer radius) {
+
+        IKakaoMapUrl iKakaoMapUrl = ApplicationContextProvider.getContext()
+                .getBean(KakaoMapCategoryUrl.class);
+
+        var kakaoMapCategoryReq = new KakaoMapCategoryReq(
+                category_group_code, x, y, radius);
+
+        var uri = UriComponentsBuilder
+                .fromUriString(iKakaoMapUrl.getUrl())
+                .queryParams(kakaoMapCategoryReq.toMultiValueMap())
+                .build(false).encode().toUri();
+
+        var headers = new HttpHeaders();
+        headers.set("Authorization", authorization);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        var httpEntity = new HttpEntity<>(headers);
+        var responseType = new ParameterizedTypeReference<KakaoMapCategoryRes>(){};
+
+        var responseEntity = new RestTemplate().exchange(
                 uri,
                 HttpMethod.GET,
                 httpEntity,
                 responseType
         );
 
-        return XmlParser.parse(responseEntity.getBody());
-
+        return responseEntity.getBody();
     }
+
 
 }

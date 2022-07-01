@@ -1,5 +1,6 @@
 package dh.realestate.service.kakaomap.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,16 +20,23 @@ public class KakaoMapCategoryRes {
     @AllArgsConstructor
     public static class KakaoMapCategoryDoc {
         private String id;
-        private String place_name;
-        private String category_name;
-        private String category_group_code;
-        private String category_group_name;
+        @JsonProperty("place_name")
+        private String placeName;
+        @JsonProperty("category_name")
+        private String categoryName;
+        @JsonProperty("category_group_code")
+        private String categoryGroupCode;
+        @JsonProperty("category_group_name")
+        private String categoryGroupName;
         private String phone;
-        private String address_name;
-        private String road_address_name;
+        @JsonProperty("address_name")
+        private String addressName;
+        @JsonProperty("road_address_name")
+        private String roadAddressName;
         private String x;
         private String y;
-        private String place_url;
+        @JsonProperty("place_url")
+        private String placeUrl;
         private String distance;
     }
 
@@ -36,10 +44,14 @@ public class KakaoMapCategoryRes {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class KakaoMapCategoryMeta {
-        private int total_count;
-        private int pageable_count;
-        private boolean is_end;
-        private RegionInfo same_name;
+        @JsonProperty("total_count")
+        private int totalCount;
+        @JsonProperty("pageable_count")
+        private int pageableCount;
+        @JsonProperty("is_end")
+        private boolean isEnd;
+        @JsonProperty("same_name")
+        private RegionInfo sameName;
     }
 
     @Data
@@ -48,6 +60,7 @@ public class KakaoMapCategoryRes {
     public static class RegionInfo {
         private String[] region;
         private String keyword;
-        private String selected_region;
+        @JsonProperty("selected_region")
+        private String selectedRegion;
     }
 }

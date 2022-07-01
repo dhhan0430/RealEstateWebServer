@@ -17,6 +17,13 @@ class MolitClientTest {
     private MolitClient molitClient;
 
     @Test
+    public void molitCodeTest() throws FileNotFoundException, UnsupportedEncodingException {
+
+        System.out.println(molitClient.codeSearch("서초구"));
+    }
+
+
+    @Test
     public void molitServiceTest() throws FileNotFoundException, UnsupportedEncodingException {
 
         MolitRealEstateRes result = molitClient.searchRealEstate("서초구", "아파트");
