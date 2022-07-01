@@ -11,3 +11,7 @@ KakaoMap:
     Coordinate: https://dapi.kakao.com/v2/local/search/address.json
     Category: https://dapi.kakao.com/v2/local/search/category.json
   CurrentYear: 2022
+  Subway:
+    Radius: 500
+  Hospital:
+    Radius: 1000

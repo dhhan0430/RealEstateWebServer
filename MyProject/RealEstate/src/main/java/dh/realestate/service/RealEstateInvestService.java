@@ -21,6 +21,7 @@ public class RealEstateInvestService {
 
     @Value("${KakaoMap.CurrentYear}")
     private String currentYear;
+
     private final MolitClient molitClient;
     private final KakaoMapClient kakaoMapClient;
 
@@ -43,15 +44,22 @@ public class RealEstateInvestService {
         List<Item> filteredRealEstate = molitRealEstateRes
                 .getBody().getItems().stream()
                 .filter(item ->
-                        Integer.parseInt(item.getDealAmount()) >= lowPrice &&
-                                Integer.parseInt(item.getDealAmount()) <= highPrice &&
-                                item.getBuildYear() >= lowYear &&
-                                item.getBuildYear() <= highYear
+                        Integer.parseInt(item.getDealAmount()
+                                .replaceAll(",", "")
+                                .replaceAll(" ", "")) >= lowPrice &&
+                        Integer.parseInt(item.getDealAmount()
+                                .replaceAll(",", "")
+                                .replaceAll(" ", "")) <= highPrice &&
+                        item.getBuildYear() >= lowYear &&
+                        item.getBuildYear() <= highYear
                 ).collect(Collectors.toList());
+
+        System.out.println("total count: " + filteredRealEstate.stream().count());
 
         // filtering 된 매물들 기준으로 KakaoMap Coordinate 변환 진행
         for (Item realEstate : filteredRealEstate) {
 
+            System.out.println("-------------------------------------------------------------------------");
             var address = new StringBuilder(region).append(" ")
                     .append(realEstate.getTownName()).append(" ")
                     .append(realEstate.getLotNumber())
@@ -61,12 +69,18 @@ public class RealEstateInvestService {
                     = kakaoMapClient.convertAddressToCoordinate(address);
 
             var coordinate =
-                    kakaoMapCoordinateRes
+                    kakaoMapCoordinateRes.getDocuments().stream()
+                            .findFirst().get();
+
             var kakaoMapCategoryRes=
                     kakaoMapClient.searchNearby(
-                            "SW8"
+                            "SW8",
+                            coordinate.getX(),
+                            coordinate.getY()
+                    );
 
-            );
+            System.out.println("address: " + address + " " + realEstate.getApartName());
+            System.out.println("total cnt: " + kakaoMapCategoryRes.getMeta().getTotalCount() + ", " + kakaoMapCategoryRes);
 
         }
 

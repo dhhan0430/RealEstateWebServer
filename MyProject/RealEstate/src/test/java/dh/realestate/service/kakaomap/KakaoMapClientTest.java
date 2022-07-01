@@ -28,8 +28,8 @@ class KakaoMapClientTest {
                 kakaoMapClient.searchNearby(
                         "SW8",
                         "127.06283102249932",
-                        "37.514322572335935",
-                        500)
+                        "37.514322572335935"
+                        )
         );
     }
 

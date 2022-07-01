@@ -19,10 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 @Component
@@ -50,7 +47,7 @@ public class MolitClient {
         }
 
         // Region Code 찾기
-        var regionCode = codeSearch(region);
+        var regionCode = searchCode(region);
         if (regionCode == null) {
             // throw
         }
@@ -83,7 +80,7 @@ public class MolitClient {
 
     }
 
-    public String codeSearch(String region)
+    public String searchCode(String region)
             throws FileNotFoundException, UnsupportedEncodingException {
 
         var filePath = "src/main/resources/rs_code.txt";

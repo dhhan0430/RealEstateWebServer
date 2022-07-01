@@ -8,8 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 class MolitClientTest {
 
@@ -19,12 +17,12 @@ class MolitClientTest {
     @Test
     public void molitCodeTest() throws FileNotFoundException, UnsupportedEncodingException {
 
-        System.out.println(molitClient.codeSearch("서초구"));
+        System.out.println(molitClient.searchCode("서초구"));
     }
 
 
     @Test
-    public void molitServiceTest() throws FileNotFoundException, UnsupportedEncodingException {
+    public void molitRealEstateTest() throws FileNotFoundException, UnsupportedEncodingException {
 
         MolitRealEstateRes result = molitClient.searchRealEstate("서초구", "아파트");
         System.out.println(result);
