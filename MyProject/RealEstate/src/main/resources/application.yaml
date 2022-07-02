@@ -1,17 +1,19 @@
+Date:
+  Year: "2022"
+  Month: "05"
+
 Molit:
   ServiceKey: afirxQFMzYfudfpCPw5F%2Bu19%2FlGBaq%2FBVMERCGqF6jWZs78Ru5urycXEXhe9SoALKV%2Blts9z0XijRLwq5dMeCw%3D%3D
   URL:
     Apartment: http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade
     Villa: http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade
-  DealDate: 202205
 
 KakaoMap:
   Authorization: KakaoAK 2336ed0cb2d74ae2a97ab282ad2cd4a1
   URL:
     Coordinate: https://dapi.kakao.com/v2/local/search/address.json
     Category: https://dapi.kakao.com/v2/local/search/category.json
-  CurrentYear: 2022
   Subway:
     Radius: 500
-  Hospital:
-    Radius: 1000
+  Supermarket:
+    Radius: 500

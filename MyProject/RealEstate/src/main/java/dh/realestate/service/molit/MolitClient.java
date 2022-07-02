@@ -25,10 +25,12 @@ import java.util.Scanner;
 @Component
 public class MolitClient {
 
+    @Value("${Date.Year}")
+    private String currentYear;
+    @Value("${Date.Month}")
+    private String currentMonth;
     @Value("${Molit.ServiceKey}")
     private String serviceKey;
-    @Value("${Molit.DealDate}")
-    private String dealDate;
 
     public MolitRealEstateRes searchRealEstate(String region, String type)
             throws FileNotFoundException, UnsupportedEncodingException {
@@ -52,9 +54,7 @@ public class MolitClient {
             // throw
         }
 
-        System.out.println(iMolitUrl.getUrl());
-
-        var molitRealEstateReq = new MolitRealEstateReq(serviceKey, regionCode, dealDate);
+        var molitRealEstateReq = new MolitRealEstateReq(serviceKey, regionCode, currentYear + currentMonth);
 
         var uri = UriComponentsBuilder
                 .fromUriString(iMolitUrl.getUrl())
@@ -75,9 +75,7 @@ public class MolitClient {
                 httpEntity,
                 responseType
         );
-
         return XmlParser.parse(responseEntity.getBody());
-
     }
 
     public String searchCode(String region)

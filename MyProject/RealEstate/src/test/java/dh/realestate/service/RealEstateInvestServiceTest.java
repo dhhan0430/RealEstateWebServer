@@ -18,13 +18,9 @@ class RealEstateInvestServiceTest {
     @Test
     public void realEstateSearchTest() throws FileNotFoundException, UnsupportedEncodingException {
 
-        realEstateInvestService.search(
-                "서초구",
-                "아파트",
-                300000,
-                500000,
-                1950,
-                2021
+        var realEstateSearchDto = realEstateInvestService.search(
+                "서초구", "아파트", 400000, 500000, 1950, 2021
         );
+        System.out.println(realEstateSearchDto);
     }
 }

@@ -36,6 +36,8 @@ public class KakaoMapClient {
     private String authorization;
     @Value("${KakaoMap.Subway.Radius}")
     private Integer subwayRadius;
+    @Value("${KakaoMap.Supermarket.Radius}")
+    private Integer supermarketRadius;
 
     public KakaoMapCoordinateRes convertAddressToCoordinate(String address) {
 
@@ -71,8 +73,16 @@ public class KakaoMapClient {
         IKakaoMapUrl iKakaoMapUrl = ApplicationContextProvider.getContext()
                 .getBean(KakaoMapCategoryUrl.class);
 
+        Integer radius = null;
+        if (category_group_code.equals("SW8")) {
+            radius = subwayRadius;
+        }
+        else if (category_group_code.equals("MT1")) {
+            radius = supermarketRadius;
+        }
+
         var kakaoMapCategoryReq = new KakaoMapCategoryReq(
-                category_group_code, x, y, subwayRadius);
+                category_group_code, x, y, radius);
 
         var uri = UriComponentsBuilder
                 .fromUriString(iKakaoMapUrl.getUrl())
