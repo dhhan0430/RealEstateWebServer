@@ -8,26 +8,15 @@ import dh.realestate.service.kakaomap.dto.KakaoMapCoordinateRes;
 import dh.realestate.service.kakaomap.url.IKakaoMapUrl;
 import dh.realestate.service.kakaomap.url.KakaoMapCategoryUrl;
 import dh.realestate.service.kakaomap.url.KakaoMapCoordinateUrl;
-import dh.realestate.service.molit.dto.MolitRealEstateReq;
-import dh.realestate.service.molit.dto.MolitRealEstateRes;
-import dh.realestate.service.molit.dto.xmlresponse.XmlParser;
-import dh.realestate.service.molit.url.IMolitUrl;
-import dh.realestate.service.molit.url.MolitApartUrl;
-import dh.realestate.service.molit.url.MolitVillaUrl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 
 @Component
 public class KakaoMapClient {

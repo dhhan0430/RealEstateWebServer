@@ -7,7 +7,7 @@ import dh.realestate.service.kakaomap.dto.KakaoMapCategoryRes;
 import dh.realestate.service.kakaomap.dto.KakaoMapCoordinateRes;
 import dh.realestate.service.molit.MolitClient;
 import dh.realestate.service.molit.dto.MolitRealEstateRes;
-import dh.realestate.service.molit.dto.xmlresponse.Item;
+import dh.realestate.service.molit.dto.xmlresponse.body.item.Item;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +36,10 @@ public class RealEstateInvestService {
             throws FileNotFoundException, UnsupportedEncodingException {
 
         // 예외 처리
+        if ( (lowPrice == null || highPrice == null || !(lowPrice < highPrice)) ||
+                (lowYear == null || highYear == null || !(lowYear < highYear)) ) {
+            throw new RuntimeException("Query Parameter Error!");
+        }
 
         // input parameter: 1.region, 2.type
         var molitRealEstateRes=
@@ -54,7 +57,7 @@ public class RealEstateInvestService {
                 (int)filteredRealEstate.stream().count()
         );
 
-        // filtering 된 매물들 기준으로 KakaoMap Coordinate 변환 진행
+        // filtering 된 매물들 기준으로 KakaoMap Coordinate 변환, Category 검색 진행
         for (Item re : filteredRealEstate) {
             var address = buildAddress(region, re);
             var realEstateInfoDto = new RealEstateInfoDto(
@@ -80,8 +83,8 @@ public class RealEstateInvestService {
     public String removeSpace(String str) {
         return str.replaceAll(",", "").replaceAll(" ", "");
     }
-    public List<Item> filterByQueryParam(
-            MolitRealEstateRes res, Integer lowPrice, Integer highPrice, Integer lowYear, Integer highYear) {
+    public <T extends Item> List<Item> filterByQueryParam(
+            MolitRealEstateRes<T> res, Integer lowPrice, Integer highPrice, Integer lowYear, Integer highYear) {
         List<Item> filteredRealEstate = res.getBody().getItems().stream()
                 .filter(item ->
                         Integer.parseInt(removeSpace(item.getDealAmount())) >= lowPrice &&

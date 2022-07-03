@@ -45,13 +45,13 @@ public class MolitClient {
                     .getBean(MolitVillaUrl.class);
         }
         else {
-            // throw
+            throw new RuntimeException("RealEstate Type Error!");
         }
 
         // Region Code 찾기
         var regionCode = searchCode(region);
         if (regionCode == null) {
-            // throw
+            throw new RuntimeException("Region Error");
         }
 
         var molitRealEstateReq = new MolitRealEstateReq(serviceKey, regionCode, currentYear + currentMonth);
@@ -75,7 +75,7 @@ public class MolitClient {
                 httpEntity,
                 responseType
         );
-        return XmlParser.parse(responseEntity.getBody());
+        return XmlParser.parse(responseEntity.getBody(), type);
     }
 
     public String searchCode(String region)
