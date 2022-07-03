@@ -1,7 +1,9 @@
 package dh.realestate.service;
 
-import dh.realestate.model.dto.RealEstateInfoDto;
-import dh.realestate.model.dto.RealEstateSearchDto;
+import dh.realestate.model.dto.RealEstateInfo;
+import dh.realestate.model.dto.RealEstateSearch;
+
+//import dh.realestate.repository.RealEstateRepository;
 import dh.realestate.service.kakaomap.KakaoMapClient;
 import dh.realestate.service.kakaomap.dto.KakaoMapCategoryRes;
 import dh.realestate.service.kakaomap.dto.KakaoMapCoordinateRes;
@@ -12,9 +14,11 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +35,9 @@ public class RealEstateInvestService {
     private final MolitClient molitClient;
     private final KakaoMapClient kakaoMapClient;
 
-    public RealEstateSearchDto search(
+    //private final RealEstateRepository realEstateRepository;
+
+    public RealEstateSearch search(
             String region, String type, Integer lowPrice, Integer highPrice, Integer lowYear, Integer highYear)
             throws FileNotFoundException, UnsupportedEncodingException {
 
@@ -50,7 +56,7 @@ public class RealEstateInvestService {
                 molitRealEstateRes, lowPrice, highPrice, lowYear, highYear
         );
 
-        var realEstateSearchDto = new RealEstateSearchDto(
+        var realEstateSearch = new RealEstateSearch(
                 region, type, currentYear + " " + currentMonth,
                 new StringBuilder().append(lowPrice).append("~").append(highPrice).toString(),
                 new StringBuilder().append(lowYear).append("~").append(highYear).toString(),
@@ -60,7 +66,7 @@ public class RealEstateInvestService {
         // filtering 된 매물들 기준으로 KakaoMap Coordinate 변환, Category 검색 진행
         for (Item re : filteredRealEstate) {
             var address = buildAddress(region, re);
-            var realEstateInfoDto = new RealEstateInfoDto(
+            var realEstateInfo = new RealEstateInfo(
                     re.getApartName(), address, type, re.getAreaForExclusiveUse(),
                     removeSpace(re.getDealAmount()), re.getBuildYear()
             );
@@ -68,16 +74,16 @@ public class RealEstateInvestService {
             var coordinate =
                     kakaoMapClient.convertAddressToCoordinate(address).getDocuments().stream().findFirst().get();
             // 주변 지하철역 추가
-            addSubwayList(realEstateInfoDto, coordinate);
+            addSubwayList(realEstateInfo, coordinate);
             // 주변 대형마트 추가
-            addSupermarketList(realEstateInfoDto, coordinate);
+            addSupermarketList(realEstateInfo, coordinate);
 
-            realEstateSearchDto.getRealEstateList().add(realEstateInfoDto);
+            realEstateSearch.getRealEstateList().add(realEstateInfo);
         }
 
-        Collections.sort(realEstateSearchDto.getRealEstateList());
+        Collections.sort(realEstateSearch.getRealEstateList());
 
-        return realEstateSearchDto;
+        return realEstateSearch;
     }
 
     public String removeSpace(String str) {
@@ -106,30 +112,36 @@ public class RealEstateInvestService {
     }
 
     public void addSubwayList(
-            RealEstateInfoDto realEstateInfoDto, KakaoMapCoordinateRes.KakaoMapCoordinateDoc coordinate) {
+            RealEstateInfo realEstateInfo, KakaoMapCoordinateRes.KakaoMapCoordinateDoc coordinate) {
 
         var kakaoMapCategoryRes= kakaoMapClient.searchNearby(
                 "SW8", coordinate.getX(), coordinate.getY());
         for (KakaoMapCategoryRes.KakaoMapCategoryDoc sw : kakaoMapCategoryRes.getDocuments()) {
-            var subway = new RealEstateInfoDto.Subway(
+            var subway = new RealEstateInfo.Subway(
                     sw.getPlaceName(), sw.getAddressName(), sw.getPlaceUrl(), sw.getDistance()
             );
-            realEstateInfoDto.getSubways().add(subway);
+            realEstateInfo.getSubways().add(subway);
         }
     }
 
     public void addSupermarketList(
-            RealEstateInfoDto realEstateInfoDto, KakaoMapCoordinateRes.KakaoMapCoordinateDoc coordinate) {
+            RealEstateInfo realEstateInfo, KakaoMapCoordinateRes.KakaoMapCoordinateDoc coordinate) {
 
         var kakaoMapCategoryRes = kakaoMapClient.searchNearby(
                 "MT1", coordinate.getX(), coordinate.getY()
         );
         for (KakaoMapCategoryRes.KakaoMapCategoryDoc mt : kakaoMapCategoryRes.getDocuments()) {
-            var supermarket = new RealEstateInfoDto.Supermarket(
+            var supermarket = new RealEstateInfo.Supermarket(
                     mt.getPlaceName(), mt.getAddressName(), mt.getPlaceUrl(), mt.getDistance()
             );
-            realEstateInfoDto.getSupermarkets().add(supermarket);
+            realEstateInfo.getSupermarkets().add(supermarket);
         }
+    }
+
+
+    public void add(@RequestBody RealEstateInfo realEstateInfo) {
+
+
     }
 
 }
