@@ -3,7 +3,7 @@ package dh.realestate.service;
 import dh.realestate.model.dto.RealEstateInfo;
 import dh.realestate.model.dto.RealEstateSearch;
 
-//import dh.realestate.repository.RealEstateRepository;
+import dh.realestate.repository.RealEstateRepository;
 import dh.realestate.service.kakaomap.KakaoMapClient;
 import dh.realestate.service.kakaomap.dto.KakaoMapCategoryRes;
 import dh.realestate.service.kakaomap.dto.KakaoMapCoordinateRes;
@@ -35,7 +35,7 @@ public class RealEstateInvestService {
     private final MolitClient molitClient;
     private final KakaoMapClient kakaoMapClient;
 
-    //private final RealEstateRepository realEstateRepository;
+    private final RealEstateRepository realEstateRepository;
 
     public RealEstateSearch search(
             String region, String type, Integer lowPrice, Integer highPrice, Integer lowYear, Integer highYear)
