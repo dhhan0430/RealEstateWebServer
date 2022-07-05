@@ -4,6 +4,7 @@ spring:
     console:
       enabled: true
   jpa:
+    # data.sql 실행
     defer-datasource-initialization: true
     # sql 쿼리 넣는 것을 보여준다.
     show-sql: true

@@ -160,6 +160,8 @@ public class BookService {
         // 2nd tx의 id 2 값까지 포함되어 진행된다. 즉, 자신이 2nd tx보다 먼저 시작됐는데,
         // 중간에 2nd tx 로 인해 insert된 값을 읽을 수가 있게 된다.
         // 반면에 REPEATABLE_READ의 경우 중간에 2nd tx 로 인해 insert된 값을 읽을 수 없다.
+        // 그래서 findAll()을 했을 때 id 2 값이 안 보이기 때문에, 이 상태에서 update():write를
+        // 하게 되면, id 2에도 적용이 되어 개발자 입장에선 의도하지 않은 작업이 되게 된다.
         // REPEATABLE_READ 와 SERIALIZABLE 에 대해서 차이점을 정리하자면,
         // REPEATABLE_READ 의 내가 설정한 Transactional 메서드 안에서
         // 당연히 tx를 시작했을 때와 똑같은 값만 read가 되기 때문에 그 기반으로 전체 write를
@@ -173,7 +175,9 @@ public class BookService {
         // write 작업에 대해서 온전히 자신의 tx 시작 시간을 기준으로 처리해준다는 개념이 아니다.
         // write 작업은 runtime으로 그 상황을 실시간으로 접해야 write 한다는 것을 알 수 있다.
         // SERIALIZABLE 의 취지는 실시간으로 모든 tx들의 변경 값을 커밋된 기준으로
-        // 반영해줄 수 있다 는 것이다. REPEATABLE_READ의 경우 read 작업이 내 tx 시작 시간을
+        // 반영해줄 수 있다 는 것이다.(물론 REPEATABLE_READ의 write 경우도 내 tx가 write할 때,
+        // 다른 tx들의 commit이 완료될 때까지 lock이 걸려서 waiting하게 된다.)
+        // REPEATABLE_READ의 경우 read 작업이 내 tx 시작 시간을
         // 기준으로 일관되게 같은 값을 읽기 때문에 그리고 그 기준으로 write를 하면
         // 그 기준으로 값이 변경될거라는 오해에 빠질 수 있다. 즉 개발자 입장에선 의도치 않은
         // 결과가 나올 수 있다는 것이다. SERIALIZABLE 은 실시간 커밋된 값을 lock을 통해서
@@ -184,7 +188,10 @@ public class BookService {
         // 그 최신 값을 기반으로 실시간으로 로직을 타게 된다.
         // 이런 것을 데이터 정합성이 100프로 맞다 라고 한다.
         // 다만 SERIALIZABLE 의 경우 2nd tx 같은 존재에 대해 lock을 통해 커밋을 기다려야
-        // 하기 때문에 처리 속도가 느려지게 된다.
+        // 하기 때문에 처리 속도가 느려지게 된다. READ_COMMITTED 의 경우도 내 tx가 시작된
+        // 이후에 변경되고 commit된 값을 읽을 수 있지만, clear()를 하기 전까진 계속 자신의
+        // 캐시에 있는 값을 일관되게 읽게 된다. 즉, clear()를 해줘야만 다른 tx에서 commit한
+        // 값이 실시간으로 반영된다. 하지만, SERIALIZABLE 의 경우 자동으로 반영된다.
         // 따라서, READ_UNCOMMITTED는 정합성 때문에 거의 쓰지 않고,
         // SERIALIZABLE은 성능 때문에 쓰지 않는다.
         // 대부분 READ_COMMITTED 나 REPEATABLE_READ 의 격리 수준을 사용하게 된다.

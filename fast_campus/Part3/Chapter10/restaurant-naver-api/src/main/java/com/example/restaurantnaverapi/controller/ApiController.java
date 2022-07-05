@@ -38,6 +38,7 @@ public class ApiController {
 
     @DeleteMapping("/{index}")
     public void delete(@PathVariable int index) {
+
         wishListService.delete(index);
     }
 

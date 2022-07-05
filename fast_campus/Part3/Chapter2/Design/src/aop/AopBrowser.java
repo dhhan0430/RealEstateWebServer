@@ -20,6 +20,7 @@ public class AopBrowser implements IBrowser {
     public Html show() {
 
         before.run();
+        // caching 구현
         if (html == null) {
             System.out.println("AopBrowser html loading from:" + url);
             this.html = new Html(url);
