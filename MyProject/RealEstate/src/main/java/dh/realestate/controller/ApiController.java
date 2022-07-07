@@ -35,6 +35,9 @@ public class ApiController {
     public /*RealEstateInfoDto*/ void add(@RequestBody RealEstateInfo realEstateInfo) {
 
         System.out.println(realEstateInfo);
+
+        //realEstateInvestService.add(realEstateInfo);
+
         //return realEstateInvestService.add(realEstateDto);
     }
 

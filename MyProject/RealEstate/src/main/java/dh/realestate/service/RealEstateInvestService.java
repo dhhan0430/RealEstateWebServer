@@ -3,6 +3,9 @@ package dh.realestate.service;
 import dh.realestate.model.dto.RealEstateInfo;
 import dh.realestate.model.dto.RealEstateSearch;
 
+import dh.realestate.model.entity.RealEstate;
+import dh.realestate.model.entity.Subway;
+import dh.realestate.model.entity.Supermarket;
 import dh.realestate.repository.RealEstateRepository;
 import dh.realestate.service.kakaomap.KakaoMapClient;
 import dh.realestate.service.kakaomap.dto.KakaoMapCategoryRes;
@@ -12,6 +15,7 @@ import dh.realestate.service.molit.dto.MolitRealEstateRes;
 import dh.realestate.service.molit.dto.xmlresponse.body.item.Item;
 import lombok.RequiredArgsConstructor;
 
+import net.bytebuddy.implementation.bind.annotation.Super;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -141,7 +145,48 @@ public class RealEstateInvestService {
 
     public void add(@RequestBody RealEstateInfo realEstateInfo) {
 
+        var realEstateEntity = dtoToRealEstateEntity(realEstateInfo);
+
+        Subway subwayEntity = null;
+        if (realEstateInfo.getSubways() != null) {
+            subwayEntity = dtoToSubwayEntity(realEstateInfo.get);
+        }
+
 
     }
 
+    public RealEstate dtoToRealEstateEntity(RealEstateInfo realEstateInfo) {
+        var entity = RealEstate.builder()
+                .name(realEstateInfo.getName())
+                .address(realEstateInfo.getAddress())
+                .type(realEstateInfo.getType())
+                .areaForExclusiveUse(realEstateInfo.getAreaForExclusiveUse())
+                .marketPrice(realEstateInfo.getMarketPrice())
+                .buildYear(realEstateInfo.getBuildYear())
+                .build();
+
+        return entity;
+    }
+
+    public Subway dtoToSubwayEntity(RealEstateInfo.Subway subway) {
+        var entity = Subway.builder()
+                .placeName(subway.getPlaceName())
+                .addressName(subway.getAddressName())
+                .placeUrl(subway.getPlaceUrl())
+                .distance(subway.getDistance())
+                .build();
+
+        return entity;
+    }
+
+    public Supermarket dtoToSupermarketEntity(RealEstateInfo.Supermarket supermarket) {
+        var entity = Supermarket.builder()
+                .placeName(supermarket.getPlaceName())
+                .addressName(supermarket.getAddressName())
+                .placeUrl(supermarket.getPlaceUrl())
+                .distance(supermarket.getDistance())
+                .build();
+
+        return entity;
+    }
 }

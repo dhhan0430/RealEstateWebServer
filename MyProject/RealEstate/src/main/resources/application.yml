@@ -1,0 +1,42 @@
+Date:
+  Year: "2022"
+  Month: "05"
+
+Molit:
+  ServiceKey: afirxQFMzYfudfpCPw5F%2Bu19%2FlGBaq%2FBVMERCGqF6jWZs78Ru5urycXEXhe9SoALKV%2Blts9z0XijRLwq5dMeCw%3D%3D
+  URL:
+    Apartment: http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade
+    Villa: http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade
+
+KakaoMap:
+  Authorization: KakaoAK 2336ed0cb2d74ae2a97ab282ad2cd4a1
+  URL:
+    Coordinate: https://dapi.kakao.com/v2/local/search/address.json
+    Category: https://dapi.kakao.com/v2/local/search/category.json
+  Subway:
+    Radius: 500
+  Supermarket:
+    Radius: 500
+
+spring:
+  jpa:
+    # data.sql 실행
+    defer-datasource-initialization: true
+    # sql 쿼리 넣는 것을 보여줌
+    show-sql: true
+    properties:
+      hibernate:
+        # sql 쿼리가 정렬되게 나오도록 함
+        format_sql: true
+    # mysql 에서 사용
+    # 자동으로 entity 에서 활용하고 있는 테이블들을 생성해줌
+    # ddl: data.sql definition language
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: jdbc:mysql://localhost:3306/RealEstate
+    username: root
+    password: abcd
+    # schema.sql or data.sql 실
+    initialization-mode: always

@@ -1,6 +1,7 @@
 package dh.realestate.model.entity;
 
 import dh.realestate.model.entity.listener.Auditable;
+import dh.realestate.model.entity.listener.MyEntityListener;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -13,7 +14,8 @@ import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
-@EntityListeners(value = AuditingEntityListener.class)
+//@EntityListeners(value = AuditingEntityListener.class)
+@EntityListeners(value = MyEntityListener.class)
 public class BaseEntity implements Auditable {
 
     @CreatedDate

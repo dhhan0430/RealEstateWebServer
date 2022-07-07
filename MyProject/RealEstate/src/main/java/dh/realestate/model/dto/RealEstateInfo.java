@@ -32,6 +32,7 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
     private List<Supermarket> supermarkets = new ArrayList<>(); // list of supermarket nearby
     // private String hospital;   // list of hospital nearby
 
+    @Builder
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -44,6 +45,7 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
         private String distance;
     }
 
+    @Builder
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

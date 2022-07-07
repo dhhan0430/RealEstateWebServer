@@ -24,6 +24,18 @@ class RealEstateRepositoryTest {
     @Test
     void dataSqlTest() {
 
+//        var user = new User();
+//        System.out.println(user);
+//        userRepository.save(user);
+//
+//        System.out.println("-----------------------------------------");
+//        userRepository.findAll().forEach(System.out::println);
+//        System.out.println("-----------------------------------------");
+
+        System.out.println("-------------------------------------------");
+        realEstateRepository.findAll().forEach(System.out::println);
+        System.out.println("-------------------------------------------");
+
     }
 
 }
