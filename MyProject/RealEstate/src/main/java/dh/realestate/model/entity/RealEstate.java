@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Builder
@@ -31,10 +32,16 @@ public class RealEstate extends BaseEntity {
     private int buildYear;                  // year of construct ion
     @OneToMany
     @JoinColumn(name = "real_estate_id") // 이렇게 해야 mapping table이 안 생긴다.
-    private List<RealEstateAndSubway> subways = new ArrayList<>(); // list of subway line nearby
+    private List<RealEstateAndSubway> realEstateAndSubways = new ArrayList<>(); // list of subway line nearby
     @OneToMany
     @JoinColumn(name = "real_estate_id") // 이렇게 해야 mapping table이 안 생긴다.
-    private List<RealEstateAndSupermarket> supermarkets = new ArrayList<>(); // list of supermarket nearby
-    // private String hospital;   // list of hospital nearby
+    private List<RealEstateAndSupermarket> realEstateAndSupermarkets = new ArrayList<>(); // list of supermarket nearby
 
+    public void addRealEstateAndSubways(RealEstateAndSubway... realEstateAndSubways) {
+        Collections.addAll(this.realEstateAndSubways, realEstateAndSubways);
+    }
+
+    public void addRealEstateAndSupermarkets(RealEstateAndSupermarket... realEstateAndSupermarkets) {
+        Collections.addAll(this.realEstateAndSupermarkets, realEstateAndSupermarkets);
+    }
 }
