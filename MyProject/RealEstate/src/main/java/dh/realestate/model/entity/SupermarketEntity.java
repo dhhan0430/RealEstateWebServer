@@ -26,7 +26,7 @@ public class SupermarketEntity extends BaseEntity {
     private String placeName;
     private String addressName;
     private String placeUrl;
-    private String distance;
+    //private String distance;
 
     @OneToMany
     @JoinColumn(name = "supermarket")
@@ -41,7 +41,6 @@ public class SupermarketEntity extends BaseEntity {
                 .placeName(getPlaceName())
                 .addressName(getAddressName())
                 .placeUrl(getPlaceUrl())
-                .distance(getDistance())
                 .build();
 
         return dto;

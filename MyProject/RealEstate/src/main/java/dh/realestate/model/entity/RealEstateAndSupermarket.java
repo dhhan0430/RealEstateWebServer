@@ -22,11 +22,16 @@ public class RealEstateAndSupermarket extends BaseEntity{
     private Long id;
 
     @NonNull
+    private String distance;
+
+    @NonNull
     @ManyToOne
+    @ToString.Exclude
     private RealEstateEntity realEstateEntity;
 
     @NonNull
     @ManyToOne
+    @ToString.Exclude
     private SupermarketEntity supermarketEntity;
 
 }

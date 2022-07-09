@@ -45,14 +45,14 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
         private String placeName;
         private String addressName;
         private String placeUrl;
-        private String distance;
+        private String distance;    // RealEstateAndSubway 에서 get
 
         public SubwayEntity toEntity() {
             var entity = SubwayEntity.builder()
                     .placeName(getPlaceName())
                     .addressName(getAddressName())
                     .placeUrl(getPlaceUrl())
-                    .distance(getDistance())
+                    .realEstateAndSubways(new ArrayList<>())
                     .build();
 
             return entity;
@@ -69,14 +69,14 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
         private String placeName;
         private String addressName;
         private String placeUrl;
-        private String distance;
+        private String distance;    // RealEstateAndSupermarket 에서 get
 
         public SupermarketEntity toEntity() {
             var entity = SupermarketEntity.builder()
                     .placeName(getPlaceName())
                     .addressName(getAddressName())
                     .placeUrl(getPlaceUrl())
-                    .distance(getDistance())
+                    .realEstateAndSupermarkets(new ArrayList<>())
                     .build();
 
             return entity;
@@ -91,6 +91,8 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
                 .areaForExclusiveUse(getAreaForExclusiveUse())
                 .marketPrice(getMarketPrice())
                 .buildYear(getBuildYear())
+                .realEstateAndSubways(new ArrayList<>())
+                .realEstateAndSupermarkets(new ArrayList<>())
                 .build();
 
         return entity;

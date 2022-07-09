@@ -1,6 +1,6 @@
--- call next value for hibernate_sequence;
-insert into user (`id`, `name`, `email`, `created_at`, `updated_at`)
-values (1, 'martin', 'martin@fastcampus.com', now(), now());
+-- -- call next value for hibernate_sequence;
+-- insert into user (`id`, `name`, `email`, `created_at`, `updated_at`)
+-- values (1, 'martin', 'martin@fastcampus.com', now(), now());
 
 -- call next value for hibernate_sequence;
 -- insert into real_estate (`id`, `name`, `address`, `type`, `area_for_exclusive_use`, `market_price`, `build_year`, `subways`, `supermarkets`, `created_at`, `updated_at`)

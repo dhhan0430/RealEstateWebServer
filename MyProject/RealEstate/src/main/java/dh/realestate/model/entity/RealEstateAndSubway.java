@@ -22,10 +22,15 @@ public class RealEstateAndSubway extends BaseEntity {
     private Long id;
 
     @NonNull
+    private String distance;
+
+    @NonNull
     @ManyToOne
+    @ToString.Exclude
     private RealEstateEntity realEstateEntity;
 
     @NonNull
     @ManyToOne
+    @ToString.Exclude
     private SubwayEntity subwayEntity;
 }

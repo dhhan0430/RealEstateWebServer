@@ -149,92 +149,119 @@ public class RealEstateInvestService {
                 realEstateInfo.toEntity()
         );
 
-        List<SubwayEntity> subwayEntityList = new ArrayList<>();
-        if (realEstateInfo.getSubways() != null) {
+        if (realEstateInfo.getSubways().stream().count() > 0) {
             
-            addSubwayEntityList(realEstateInfo, subwayEntityList);
-
-            for (SubwayEntity sw : subwayEntityList) {
-                var realEstateAndSubwayEntity =
-                        realEstateAndSubwayRepository.save(
-                                new RealEstateAndSubway(realEstateEntity, sw)
-                        );
-                sw.addRealEstateAndSubways(realEstateAndSubwayEntity);
-                realEstateEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
-            }
-
+            var subwayEntityList =
+                    associateRealEstateWithSubway(realEstateInfo, realEstateEntity);
             subwayRepository.saveAll(subwayEntityList);
         }
 
-        List<SupermarketEntity> supermarketEntityList = new ArrayList<>();
-        if (realEstateInfo.getSupermarkets() != null) {
+        if (realEstateInfo.getSupermarkets().stream().count() > 0) {
 
-            addSupermarketEntityList(realEstateInfo, supermarketEntityList);
-
-            for (SupermarketEntity mt : supermarketEntityList) {
-                var realEstateAndSupermarketEntity =
-                        realEstateAndSupermarketRepository.save(
-                                new RealEstateAndSupermarket(realEstateEntity, mt)
-                        );
-                mt.addRealEstateAndSupermarkets(realEstateAndSupermarketEntity);
-                realEstateEntity.addRealEstateAndSupermarkets(realEstateAndSupermarketEntity);
-            }
-
+            var supermarketEntityList =
+                    associateRealEstateWithSupermarket(realEstateInfo, realEstateEntity);
             supermarketRepository.saveAll(supermarketEntityList);
         }
 
         return realEstateRepository.save(realEstateEntity).toDto();
     }
 
-    public void addSubwayEntityList(
-            RealEstateInfo realEstateInfo, List<SubwayEntity> subwayEntityList) {
+    public List<SubwayEntity> associateRealEstateWithSubway(
+            RealEstateInfo realEstateInfo, RealEstateEntity realEstateEntity) {
+
+        List<SubwayEntity> subwayEntityList = new ArrayList<>();
 
         realEstateInfo.getSubways().stream()
                 .filter(
                         sw -> subwayRepository.findByPlaceNameOrAddressName(
                                 sw.getPlaceName(), sw.getAddressName()) != null
                 ).forEach(
-                        sw -> subwayEntityList.add(
-                                subwayRepository.findByPlaceNameOrAddressName(
-                                        sw.getPlaceName(), sw.getAddressName()
-                                )
-                        )
+                        sw -> {
+                            var subwayEntity =
+                                    subwayRepository.findByPlaceNameOrAddressName(
+                                            sw.getPlaceName(), sw.getAddressName()
+                                    );
+                            var realEstateAndSubwayEntity =
+                                    realEstateAndSubwayRepository.save(
+                                            new RealEstateAndSubway(
+                                                    sw.getDistance(), realEstateEntity, subwayEntity
+                                            )
+                                    );
+                            realEstateEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
+                            subwayEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
+                            subwayEntityList.add(subwayEntity);
+                        }
                 );
         realEstateInfo.getSubways().stream()
                 .filter(
                         sw -> subwayRepository.findByPlaceNameOrAddressName(
                                 sw.getPlaceName(), sw.getAddressName()) == null
                 ).forEach(
-                        sw -> subwayEntityList.add(
-                                subwayRepository.save(sw.toEntity())
-                        )
+                        sw -> {
+                            var subwayEntity = subwayRepository.save(sw.toEntity());
+                            var realEstateAndSubwayEntity =
+                                    realEstateAndSubwayRepository.save(
+                                            new RealEstateAndSubway(
+                                                    sw.getDistance(), realEstateEntity, subwayEntity
+                                            )
+                                    );
+                            realEstateEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
+                            subwayEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
+                            subwayEntityList.add(subwayEntity);
+                        }
                 );
+
+        return subwayEntityList;
     }
 
-    public void addSupermarketEntityList(
-            RealEstateInfo realEstateInfo, List<SupermarketEntity> supermarketEntityList) {
+    public List<SupermarketEntity> associateRealEstateWithSupermarket(
+            RealEstateInfo realEstateInfo, RealEstateEntity realEstateEntity) {
+
+        List<SupermarketEntity> supermarketEntityList = new ArrayList<>();
 
         realEstateInfo.getSupermarkets().stream()
                 .filter(
                         mt -> supermarketRepository.findByPlaceNameOrAddressName(
                                 mt.getPlaceName(), mt.getAddressName()) != null
                 ).forEach(
-                        mt -> supermarketEntityList.add(
-                                supermarketRepository.findByPlaceNameOrAddressName(
-                                        mt.getPlaceName(), mt.getAddressName()
-                                )
-                        )
+                        mt -> {
+                            var supermarketEntity =
+                                    supermarketRepository.findByPlaceNameOrAddressName(
+                                            mt.getPlaceName(), mt.getAddressName()
+                                    );
+                            var realEstateAndSupermarketEntity =
+                                    realEstateAndSupermarketRepository.save(
+                                            new RealEstateAndSupermarket(
+                                                    mt.getDistance(), realEstateEntity, supermarketEntity
+                                            )
+                                    );
+                            realEstateEntity.addRealEstateAndSupermarkets(realEstateAndSupermarketEntity);
+                            supermarketEntity.addRealEstateAndSupermarkets(realEstateAndSupermarketEntity);
+                            supermarketEntityList.add(supermarketEntity);
+                        }
                 );
         realEstateInfo.getSupermarkets().stream()
                 .filter(
                         mt -> supermarketRepository.findByPlaceNameOrAddressName(
-                                mt.getPlaceName(), mt.getAddressName()) != null
+                                mt.getPlaceName(), mt.getAddressName()) == null
 
                 ).forEach(
-                        mt -> supermarketEntityList.add(
-                                supermarketRepository.save(mt.toEntity())
-                        )
+                        mt -> {
+                            var supermarketEntity = supermarketRepository.save(mt.toEntity());
+                            var supermarketAndSupermarketEntity =
+                                    realEstateAndSupermarketRepository.save(
+                                            new RealEstateAndSupermarket(
+                                                    mt.getDistance(), realEstateEntity, supermarketEntity
+                                            )
+                                    );
+                            realEstateEntity.addRealEstateAndSupermarkets(supermarketAndSupermarketEntity);
+                            supermarketEntity.addRealEstateAndSupermarkets(supermarketAndSupermarketEntity);
+                            supermarketEntityList.add(supermarketEntity);
+                        }
                 );
+
+        return supermarketEntityList;
     }
-   
+
+
 }
