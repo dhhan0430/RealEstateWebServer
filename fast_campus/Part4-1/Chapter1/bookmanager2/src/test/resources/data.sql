@@ -18,15 +18,28 @@ values (4, 'james', 'james@fastcampus.com', now(), now());
 insert into user (`id`, `name`, `email`, `created_at`, `updated_at`)
 values (5, 'martin', 'martin@slowcampus.com', now(), now());
 
+-- -- data.sql 은 말그대로 sql만 날려준다.
+-- insert into publisher (`id`, `name`)
+-- values (1, '패스트 캠퍼스');
+--
+-- insert into book (`id`, `name`, `publisher_id`)
+-- values (1, 'JPA 초격차 패키지', 1);
+--
+-- insert into book (`id`, `name`, `publisher_id`)
+-- values (2, 'Spring Security 초격차 패키지', 1);
+--
+-- insert into book (`id`, `name`, `publisher_id`)
+-- values (3, 'SpringBoot 올인원 패키지', 1);
+
 -- data.sql 은 말그대로 sql만 날려준다.
-insert into publisher (`id`, `name`)
-values (1, '패스트 캠퍼스');
-
-insert into book (`id`, `name`, `publisher_id`, `deleted`, `status`)
-values (1, 'JPA 초격차 패키지', 1, false, 100);
-
-insert into book (`id`, `name`, `publisher_id`, `deleted`, `status`)
-values (2, 'Spring Security 초격차 패키지', 1, false, 200);
-
-insert into book (`id`, `name`, `publisher_id`, `deleted`, `status`)
-values (3, 'SpringBoot 올인원 패키지', 1, true, 100);
+-- insert into publisher (`id`, `name`)
+-- values (1, '패스트 캠퍼스');
+--
+-- insert into book (`id`, `name`, `publisher_id`, `deleted`, `status`)
+-- values (1, 'JPA 초격차 패키지', 1, false, 100);
+--
+-- insert into book (`id`, `name`, `publisher_id`, `deleted`, `status`)
+-- values (2, 'Spring Security 초격차 패키지', 1, false, 200);
+--
+-- insert into book (`id`, `name`, `publisher_id`, `deleted`, `status`)
+-- values (3, 'SpringBoot 올인원 패키지', 1, true, 100);

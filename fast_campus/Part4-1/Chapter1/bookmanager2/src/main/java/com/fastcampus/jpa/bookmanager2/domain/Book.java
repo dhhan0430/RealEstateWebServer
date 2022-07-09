@@ -32,7 +32,7 @@ import java.util.List;
 // 자신이 변경한 2번 field 만 update 쿼리로 db에 날라가게 된다.
 // @DynamicUpdate
 // SoftDelete를 위함 => book 엔티티에 대한 쿼리메서드에 항상 false 가 붙어서 실행됨.
-@Where(clause = "deleted = false")
+//@Where(clause = "deleted = false")
 public class Book extends BaseEntity {
 
     @Id
@@ -75,9 +75,10 @@ public class Book extends BaseEntity {
     @ToString.Exclude
     private List<Review> reviews = new ArrayList<>();
 
+//    @ManyToOne
     // book 엔티티가 persist가 될 때, publisher 도 같이 persist 실행해라.
     @ManyToOne(cascade =
-            { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
+            { CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE })
     // @JoinColumn(name = "publisher_id")
     @ToString.Exclude
     private Publisher publisher;
@@ -121,7 +122,7 @@ public class Book extends BaseEntity {
     // 그렇지 않으면, 모든 varchar 타입, 모든 number 타입의 컬럼들은 해당 컨버터를
     // 타게 된다. 그래서 이런 제네럴한 타입은 autoApply 끄고, Convert Annotation을
     // 각 field에 적용하여 필요한 field만 컨버터를 타도록 한다.
-    // @Convert(converter = BookStatusConverter.class)
+    @Convert(converter = BookStatusConverter.class)
     private BookStatus status;
 
 

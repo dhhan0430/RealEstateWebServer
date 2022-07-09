@@ -7,7 +7,7 @@ import javax.persistence.Converter;
 
 // 컨버터를 자주 사용하게 될 때 autoApply 옵션을 쓰는 것이 좋다.
 // 그러면 실제 Book 클래스의 BookStatus field에 @Convert 를 작성 안 해줘도 된다.
-@Converter(autoApply = true)
+//@Converter(autoApply = true)
 // <X, Y> X: entity attribute, Y: database column
 public class BookStatusConverter implements AttributeConverter<BookStatus, Integer> {
 

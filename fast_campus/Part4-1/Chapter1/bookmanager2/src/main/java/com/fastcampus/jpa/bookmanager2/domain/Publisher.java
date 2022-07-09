@@ -29,6 +29,8 @@ public class Publisher extends BaseEntity {
     // => CascadeType.Remove + (orphanRemoval = false)
     // 만약 위와 달리 필요 없어진 고아 객체를 제거하려면 (orphanRemoval = true)
     @OneToMany(orphanRemoval = true)
+//    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER,
+//            cascade = { CascadeType.PERSIST, CascadeType.MERGE, /*CascadeType.REMOVE*/ })
     // 현재 publisher (One) <-> book (Many) 관계이다.
     // 보통 인터넷 자료에서는 Book entity (주인) 쪽에서 @JoinColumn(name = "publisher_id")로
     // 세팅을 하는데, 여기에 해도 똑같이 Book 테이블에 publisher FK 가 적용되는 것을 보니,

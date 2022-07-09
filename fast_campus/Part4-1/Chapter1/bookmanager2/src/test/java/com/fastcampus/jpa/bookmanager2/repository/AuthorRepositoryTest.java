@@ -3,6 +3,7 @@ package com.fastcampus.jpa.bookmanager2.repository;
 import com.fastcampus.jpa.bookmanager2.domain.Author;
 import com.fastcampus.jpa.bookmanager2.domain.Book;
 import com.fastcampus.jpa.bookmanager2.domain.BookAndAuthor;
+import com.fastcampus.jpa.bookmanager2.repository.dto.BookStatus;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,15 @@ class AuthorRepositoryTest {
         BookAndAuthor bookAndAuthor5 = givenBookAndAuthor(book4, author1);
         BookAndAuthor bookAndAuthor6 = givenBookAndAuthor(book4, author2);
 
+        System.out.println("/-----------------------------------------");
+        bookRepository.findAll().get(2).getBookAndAuthors().forEach(
+                o -> System.out.println(o.getAuthor())
+        );
+        authorRepository.findAll().get(0).getBookAndAuthors().forEach(
+                o -> System.out.println(o.getBook())
+        );
+        System.out.println("-----------------------------------------/");
+
         book1.addBookAndAuthors(bookAndAuthor1);
         book2.addBookAndAuthors(bookAndAuthor2);
         book3.addBookAndAuthors(bookAndAuthor3, bookAndAuthor4);
@@ -47,7 +57,17 @@ class AuthorRepositoryTest {
         author1.addBookAndAuthors(bookAndAuthor1, bookAndAuthor3, bookAndAuthor5);
         author2.addBookAndAuthors(bookAndAuthor2, bookAndAuthor4, bookAndAuthor6);
 
-
+        // findAll() 은 JPQL 로 구현되어 있기 때문에 findAll() 하기 전에 flush를 한다.
+        // 그래서, 위에 작업들을 하고 save()를 호출하지 않았는데도, entity 캐시에 있는 값들이
+        // flush 되어 아래 findAll() 시, Author나 Book들이 출력되게 된다.
+        System.out.println("/-----------------------------------------");
+        bookRepository.findAll().get(2).getBookAndAuthors().forEach(
+                o -> System.out.println(o.getAuthor())
+        );
+        authorRepository.findAll().get(0).getBookAndAuthors().forEach(
+                o -> System.out.println(o.getBook())
+        );
+        System.out.println("-----------------------------------------/");
 
         /*
         book1.addAuthor(author1);
@@ -82,6 +102,7 @@ class AuthorRepositoryTest {
     private Book givenBook(String name) {
 
         Book book = new Book();
+        book.setStatus(new BookStatus(200));
         book.setName(name);
 
         return bookRepository.save(book);

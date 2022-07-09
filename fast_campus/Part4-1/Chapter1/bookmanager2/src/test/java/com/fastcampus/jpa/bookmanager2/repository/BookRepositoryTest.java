@@ -61,10 +61,25 @@ public class BookRepositoryTest {
 
         Publisher publisher = new Publisher();
         publisher.setName("패스트 캠퍼스");
-//        publisherRepository.save(publisher);
 
         book.setPublisher(publisher);
+        book.setStatus(new BookStatus(200));
         bookRepository.save(book);
+
+        Book book2 = new Book();
+        book2.setName("JPA 초격차 패키지2");
+        book2.setStatus(new BookStatus(200));
+        var savedPublisher = publisherRepository.findById(1L).get();
+        System.out.println("savedPublisher: " + savedPublisher);
+        book2.setPublisher(savedPublisher);
+        bookRepository.save(book2);
+
+//        publisher.getBooks().add(book);
+//        publisherRepository.save(publisher);
+
+        System.out.println("------------------------------------------");
+        System.out.println("publisher0: " + bookRepository.findAll().get(0).getPublisher());
+        System.out.println("------------------------------------------");
 
         // publisher.getBooks().add(book);
         // 아래가 더 가독성 있는 코드
@@ -73,32 +88,38 @@ public class BookRepositoryTest {
 //        publisherRepository.save(publisher);
 
         System.out.println("books: " + bookRepository.findAll());
-        System.out.println("publishers: " + publisherRepository.findAll());
+        System.out.println("publishers1: " + publisherRepository.findAll());
 
         Book book1 = bookRepository.findById(1L).get();
         book1.getPublisher().setName("슬로우 캠퍼스");
 
         bookRepository.save(book1);
 
-        System.out.println("publishers: " + publisherRepository.findAll());
+        System.out.println("publishers2: " + publisherRepository.findAll());
 
 
 //        Book book2 = bookRepository.findById(1L).get();
 //        bookRepository.delete(book2);
 
         Book book3 = bookRepository.findById(1L).get();
-        book3.setPublisher(null);
+//        book3.setPublisher(null);
+//        bookRepository.save(book3);
+        bookRepository.delete(book3);
 
-        bookRepository.save(book3);
+//        Publisher publisher1 = publisherRepository.findById(1L).get();
+//        System.out.println("publisher1 book list1: " + publisher1.getBooks());
+//        publisher1.getBooks().remove(0);
+//        System.out.println("publisher1 book list2: " + publisher1.getBooks());
 
         System.out.println("books: " + bookRepository.findAll());
-        System.out.println("publisher: " + publisherRepository.findAll());
+        System.out.println("publisher3: " + publisherRepository.findAll());
         System.out.println("book3-publisher: " +
                 bookRepository.findById(1L).get().getPublisher());
     }
 
     @Test
     void bookRemoveCascadeTest() {
+        System.out.println("book0: " + bookRepository.findAll());
 
         bookRepository.deleteById(1L);
 
@@ -190,7 +211,7 @@ public class BookRepositoryTest {
 
         Book book = new Book();
         book.setName("또다른 IT 전문 서적");
-        book.setStatus(new BookStatus(200));
+        //book.setStatus(new BookStatus(200));
 
         bookRepository.save(book);
 
