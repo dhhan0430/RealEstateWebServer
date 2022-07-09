@@ -2,12 +2,15 @@ package dh.realestate.model.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import dh.realestate.model.entity.RealEstateEntity;
+import dh.realestate.model.entity.SubwayEntity;
+import dh.realestate.model.entity.SupermarketEntity;
 import lombok.*;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +18,7 @@ import java.util.List;
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class RealEstateInfo implements Comparable<RealEstateInfo> {
 
-    private Integer id;
+    private Long id;
     @NonNull
     private String name;                    // name
     @NonNull
@@ -43,6 +46,17 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
         private String addressName;
         private String placeUrl;
         private String distance;
+
+        public SubwayEntity toEntity() {
+            var entity = SubwayEntity.builder()
+                    .placeName(getPlaceName())
+                    .addressName(getAddressName())
+                    .placeUrl(getPlaceUrl())
+                    .distance(getDistance())
+                    .build();
+
+            return entity;
+        }
     }
 
     @Builder
@@ -56,6 +70,30 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
         private String addressName;
         private String placeUrl;
         private String distance;
+
+        public SupermarketEntity toEntity() {
+            var entity = SupermarketEntity.builder()
+                    .placeName(getPlaceName())
+                    .addressName(getAddressName())
+                    .placeUrl(getPlaceUrl())
+                    .distance(getDistance())
+                    .build();
+
+            return entity;
+        }
+    }
+
+    public RealEstateEntity toEntity() {
+        var entity = RealEstateEntity.builder()
+                .name(getName())
+                .address(getAddress())
+                .type(getType())
+                .areaForExclusiveUse(getAreaForExclusiveUse())
+                .marketPrice(getMarketPrice())
+                .buildYear(getBuildYear())
+                .build();
+
+        return entity;
     }
 
     @Override
@@ -73,4 +111,6 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
             return -1;
         }
     }
+
+
 }

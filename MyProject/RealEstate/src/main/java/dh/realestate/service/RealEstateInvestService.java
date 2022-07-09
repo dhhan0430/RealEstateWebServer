@@ -3,10 +3,8 @@ package dh.realestate.service;
 import dh.realestate.model.dto.RealEstateInfo;
 import dh.realestate.model.dto.RealEstateSearch;
 
-import dh.realestate.model.entity.RealEstate;
-import dh.realestate.model.entity.Subway;
-import dh.realestate.model.entity.Supermarket;
-import dh.realestate.repository.RealEstateRepository;
+import dh.realestate.model.entity.*;
+import dh.realestate.repository.*;
 import dh.realestate.service.kakaomap.KakaoMapClient;
 import dh.realestate.service.kakaomap.dto.KakaoMapCategoryRes;
 import dh.realestate.service.kakaomap.dto.KakaoMapCoordinateRes;
@@ -15,7 +13,6 @@ import dh.realestate.service.molit.dto.MolitRealEstateRes;
 import dh.realestate.service.molit.dto.xmlresponse.body.item.Item;
 import lombok.RequiredArgsConstructor;
 
-import net.bytebuddy.implementation.bind.annotation.Super;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +37,10 @@ public class RealEstateInvestService {
     private final KakaoMapClient kakaoMapClient;
 
     private final RealEstateRepository realEstateRepository;
+    private final SubwayRepository subwayRepository;
+    private final SupermarketRepository supermarketRepository;
+    private final RealEstateAndSubwayRepository realEstateAndSubwayRepository;
+    private final RealEstateAndSupermarketRepository realEstateAndSupermarketRepository;
 
     public RealEstateSearch search(
             String region, String type, Integer lowPrice, Integer highPrice, Integer lowYear, Integer highYear)
@@ -142,51 +143,98 @@ public class RealEstateInvestService {
         }
     }
 
+    public RealEstateInfo add(@RequestBody RealEstateInfo realEstateInfo) {
 
-    public void add(@RequestBody RealEstateInfo realEstateInfo) {
+        var realEstateEntity = realEstateRepository.save(
+                realEstateInfo.toEntity()
+        );
 
-        var realEstateEntity = dtoToRealEstateEntity(realEstateInfo);
-
-        Subway subwayEntity = null;
+        List<SubwayEntity> subwayEntityList = new ArrayList<>();
         if (realEstateInfo.getSubways() != null) {
-            subwayEntity = dtoToSubwayEntity(realEstateInfo.get);
+            
+            addSubwayEntityList(realEstateInfo, subwayEntityList);
+
+            for (SubwayEntity sw : subwayEntityList) {
+                var realEstateAndSubwayEntity =
+                        realEstateAndSubwayRepository.save(
+                                new RealEstateAndSubway(realEstateEntity, sw)
+                        );
+                sw.addRealEstateAndSubways(realEstateAndSubwayEntity);
+                realEstateEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
+            }
+
+            subwayRepository.saveAll(subwayEntityList);
         }
 
+        List<SupermarketEntity> supermarketEntityList = new ArrayList<>();
+        if (realEstateInfo.getSupermarkets() != null) {
 
+            addSupermarketEntityList(realEstateInfo, supermarketEntityList);
+
+            for (SupermarketEntity mt : supermarketEntityList) {
+                var realEstateAndSupermarketEntity =
+                        realEstateAndSupermarketRepository.save(
+                                new RealEstateAndSupermarket(realEstateEntity, mt)
+                        );
+                mt.addRealEstateAndSupermarkets(realEstateAndSupermarketEntity);
+                realEstateEntity.addRealEstateAndSupermarkets(realEstateAndSupermarketEntity);
+            }
+
+            supermarketRepository.saveAll(supermarketEntityList);
+        }
+
+        return realEstateRepository.save(realEstateEntity).toDto();
     }
 
-    public RealEstate dtoToRealEstateEntity(RealEstateInfo realEstateInfo) {
-        var entity = RealEstate.builder()
-                .name(realEstateInfo.getName())
-                .address(realEstateInfo.getAddress())
-                .type(realEstateInfo.getType())
-                .areaForExclusiveUse(realEstateInfo.getAreaForExclusiveUse())
-                .marketPrice(realEstateInfo.getMarketPrice())
-                .buildYear(realEstateInfo.getBuildYear())
-                .build();
+    public void addSubwayEntityList(
+            RealEstateInfo realEstateInfo, List<SubwayEntity> subwayEntityList) {
 
-        return entity;
+        realEstateInfo.getSubways().stream()
+                .filter(
+                        sw -> subwayRepository.findByPlaceNameOrAddressName(
+                                sw.getPlaceName(), sw.getAddressName()) != null
+                ).forEach(
+                        sw -> subwayEntityList.add(
+                                subwayRepository.findByPlaceNameOrAddressName(
+                                        sw.getPlaceName(), sw.getAddressName()
+                                )
+                        )
+                );
+        realEstateInfo.getSubways().stream()
+                .filter(
+                        sw -> subwayRepository.findByPlaceNameOrAddressName(
+                                sw.getPlaceName(), sw.getAddressName()) == null
+                ).forEach(
+                        sw -> subwayEntityList.add(
+                                subwayRepository.save(sw.toEntity())
+                        )
+                );
     }
 
-    public Subway dtoToSubwayEntity(RealEstateInfo.Subway subway) {
-        var entity = Subway.builder()
-                .placeName(subway.getPlaceName())
-                .addressName(subway.getAddressName())
-                .placeUrl(subway.getPlaceUrl())
-                .distance(subway.getDistance())
-                .build();
+    public void addSupermarketEntityList(
+            RealEstateInfo realEstateInfo, List<SupermarketEntity> supermarketEntityList) {
 
-        return entity;
+        realEstateInfo.getSupermarkets().stream()
+                .filter(
+                        mt -> supermarketRepository.findByPlaceNameOrAddressName(
+                                mt.getPlaceName(), mt.getAddressName()) != null
+                ).forEach(
+                        mt -> supermarketEntityList.add(
+                                supermarketRepository.findByPlaceNameOrAddressName(
+                                        mt.getPlaceName(), mt.getAddressName()
+                                )
+                        )
+                );
+        realEstateInfo.getSupermarkets().stream()
+                .filter(
+                        mt -> supermarketRepository.findByPlaceNameOrAddressName(
+                                mt.getPlaceName(), mt.getAddressName()) != null
+
+                ).forEach(
+                        mt -> supermarketEntityList.add(
+                                supermarketRepository.save(mt.toEntity())
+                        )
+                );
     }
-
-    public Supermarket dtoToSupermarketEntity(RealEstateInfo.Supermarket supermarket) {
-        var entity = Supermarket.builder()
-                .placeName(supermarket.getPlaceName())
-                .addressName(supermarket.getAddressName())
-                .placeUrl(supermarket.getPlaceUrl())
-                .distance(supermarket.getDistance())
-                .build();
-
-        return entity;
-    }
+   
 }

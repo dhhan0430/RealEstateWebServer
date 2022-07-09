@@ -6,9 +6,11 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Entity
 @ToString(callSuper = true)
@@ -19,10 +21,12 @@ public class RealEstateAndSupermarket extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NonNull
     @ManyToOne
-    private RealEstate realEstate;
+    private RealEstateEntity realEstateEntity;
 
+    @NonNull
     @ManyToOne
-    private Supermarket supermarket;
+    private SupermarketEntity supermarketEntity;
 
 }

@@ -1,7 +1,9 @@
 package dh.realestate.repository;
 
-import dh.realestate.model.entity.Subway;
+import dh.realestate.model.entity.SubwayEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SubwayRepository extends JpaRepository<Subway, Long> {
+public interface SubwayRepository extends JpaRepository<SubwayEntity, Long> {
+
+    SubwayEntity findByPlaceNameOrAddressName(String placeName, String addressName);
 }
