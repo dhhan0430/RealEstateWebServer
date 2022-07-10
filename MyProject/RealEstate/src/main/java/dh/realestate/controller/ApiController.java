@@ -35,9 +35,6 @@ public class ApiController {
     public RealEstateInfo add(@RequestBody RealEstateInfo realEstateInfo) {
 
         System.out.println(realEstateInfo);
-        if (realEstateInfo.getSubways() == null)
-            System.out.println("null");
-        else System.out.println("not null");
 
         return realEstateInvestService.add(realEstateInfo);
     }

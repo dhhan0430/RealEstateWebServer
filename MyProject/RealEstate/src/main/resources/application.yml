@@ -23,17 +23,17 @@ spring:
     # data.sql 실행
     defer-datasource-initialization: true
     # sql 쿼리 넣는 것을 보여줌
-    ##show-sql: true
+    show-sql: true
     properties:
       hibernate:
         # sql 쿼리가 정렬되게 나오도록 함
-        ##format_sql: true
+        format_sql: true
     # mysql 에서 사용
     # 자동으로 entity 에서 활용하고 있는 테이블들을 생성해줌
     # ddl: data.sql definition language
     generate-ddl: true
-    hibernate:
-      ddl-auto: create-drop
+    #hibernate:
+      #ddl-auto: create-drop
   datasource:
     url: jdbc:mysql://localhost:3306/RealEstate
     username: root
