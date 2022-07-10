@@ -18,6 +18,7 @@ import java.util.List;
 @Entity
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@Table(name = "supermarket")
 public class SupermarketEntity extends BaseEntity {
 
     @Id
@@ -29,7 +30,7 @@ public class SupermarketEntity extends BaseEntity {
     //private String distance;
 
     @OneToMany
-    @JoinColumn(name = "supermarket")
+    @JoinColumn(name = "supermarket_id")
     private List<RealEstateAndSupermarket> realEstateAndSupermarkets = new ArrayList<>();
 
     public void addRealEstateAndSupermarkets(RealEstateAndSupermarket... realEstateAndSupermarkets) {

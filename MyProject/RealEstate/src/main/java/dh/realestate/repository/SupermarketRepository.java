@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SupermarketRepository extends JpaRepository<SupermarketEntity, Long> {
 
-    SupermarketEntity findByPlaceNameOrAddressName(String placeName, String addressName);
+    SupermarketEntity findByPlaceNameAndAddressName(String placeName, String addressName);
 }

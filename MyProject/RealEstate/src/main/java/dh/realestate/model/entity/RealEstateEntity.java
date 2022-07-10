@@ -31,7 +31,7 @@ public class RealEstateEntity extends BaseEntity {
     private String type;                    // apartment or villa
     private double areaForExclusiveUse;     // size of area
     private String marketPrice;             // current market price
-    private int buildYear;                  // year of construct ion
+    private int buildYear;                  // year of construction
     @OneToMany
     @JoinColumn(name = "real_estate_id") // 이렇게 해야 mapping table이 안 생긴다.
     private List<RealEstateAndSubway> realEstateAndSubways = new ArrayList<>(); // list of subway line nearby
@@ -45,6 +45,11 @@ public class RealEstateEntity extends BaseEntity {
 
     public void addRealEstateAndSupermarkets(RealEstateAndSupermarket... realEstateAndSupermarkets) {
         Collections.addAll(this.realEstateAndSupermarkets, realEstateAndSupermarkets);
+    }
+
+    public String combineNameAndAddress() {
+        return new StringBuilder()
+                .append(getName()).append(":").append(getAddress()).toString();
     }
 
     public RealEstateInfo toDto() {

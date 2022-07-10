@@ -1,7 +1,7 @@
 package dh.realestate.service;
 
 import dh.realestate.model.dto.RealEstateInfo;
-import dh.realestate.model.dto.RealEstateSearch;
+import dh.realestate.model.dto.RealEstateList;
 
 import dh.realestate.model.entity.*;
 import dh.realestate.repository.*;
@@ -42,7 +42,7 @@ public class RealEstateInvestService {
     private final RealEstateAndSubwayRepository realEstateAndSubwayRepository;
     private final RealEstateAndSupermarketRepository realEstateAndSupermarketRepository;
 
-    public RealEstateSearch search(
+    public RealEstateList search(
             String region, String type, Integer lowPrice, Integer highPrice, Integer lowYear, Integer highYear)
             throws FileNotFoundException, UnsupportedEncodingException {
 
@@ -61,7 +61,7 @@ public class RealEstateInvestService {
                 molitRealEstateRes, lowPrice, highPrice, lowYear, highYear
         );
 
-        var realEstateSearch = new RealEstateSearch(
+        var realEstateList = new RealEstateList(
                 region, type, currentYear + " " + currentMonth,
                 new StringBuilder().append(lowPrice).append("~").append(highPrice).toString(),
                 new StringBuilder().append(lowYear).append("~").append(highYear).toString(),
@@ -83,12 +83,12 @@ public class RealEstateInvestService {
             // 주변 대형마트 추가
             addSupermarketList(realEstateInfo, coordinate);
 
-            realEstateSearch.getRealEstateList().add(realEstateInfo);
+            realEstateList.getRealEstateList().add(realEstateInfo);
         }
 
-        Collections.sort(realEstateSearch.getRealEstateList());
+        Collections.sort(realEstateList.getRealEstateList());
 
-        return realEstateSearch;
+        return realEstateList;
     }
 
     public String removeSpace(String str) {
@@ -145,6 +145,12 @@ public class RealEstateInvestService {
 
     public RealEstateInfo add(@RequestBody RealEstateInfo realEstateInfo) {
 
+        if (realEstateRepository.findByNameAndAddressAndTypeAndAreaForExclusiveUse(
+                realEstateInfo.getName(), realEstateInfo.getAddress(),
+                realEstateInfo.getType(), realEstateInfo.getAreaForExclusiveUse()) != null) {
+            return null;
+        }
+
         var realEstateEntity = realEstateRepository.save(
                 realEstateInfo.toEntity()
         );
@@ -184,7 +190,10 @@ public class RealEstateInvestService {
                             var realEstateAndSubwayEntity =
                                     realEstateAndSubwayRepository.save(
                                             new RealEstateAndSubway(
-                                                    sw.getDistance(), realEstateEntity, subwayEntity
+                                                    sw.getDistance(),
+                                                    realEstateEntity.combineNameAndAddress(),
+                                                    subwayEntity.getPlaceName(),
+                                                    realEstateEntity, subwayEntity
                                             )
                                     );
                             realEstateEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
@@ -202,7 +211,10 @@ public class RealEstateInvestService {
                             var realEstateAndSubwayEntity =
                                     realEstateAndSubwayRepository.save(
                                             new RealEstateAndSubway(
-                                                    sw.getDistance(), realEstateEntity, subwayEntity
+                                                    sw.getDistance(),
+                                                    realEstateEntity.combineNameAndAddress(),
+                                                    subwayEntity.getPlaceName(),
+                                                    realEstateEntity, subwayEntity
                                             )
                                     );
                             realEstateEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
@@ -221,18 +233,21 @@ public class RealEstateInvestService {
 
         realEstateInfo.getSupermarkets().stream()
                 .filter(
-                        mt -> supermarketRepository.findByPlaceNameOrAddressName(
+                        mt -> supermarketRepository.findByPlaceNameAndAddressName(
                                 mt.getPlaceName(), mt.getAddressName()) != null
                 ).forEach(
                         mt -> {
                             var supermarketEntity =
-                                    supermarketRepository.findByPlaceNameOrAddressName(
+                                    supermarketRepository.findByPlaceNameAndAddressName(
                                             mt.getPlaceName(), mt.getAddressName()
                                     );
                             var realEstateAndSupermarketEntity =
                                     realEstateAndSupermarketRepository.save(
                                             new RealEstateAndSupermarket(
-                                                    mt.getDistance(), realEstateEntity, supermarketEntity
+                                                    mt.getDistance(),
+                                                    realEstateEntity.combineNameAndAddress(),
+                                                    supermarketEntity.getPlaceName(),
+                                                    realEstateEntity, supermarketEntity
                                             )
                                     );
                             realEstateEntity.addRealEstateAndSupermarkets(realEstateAndSupermarketEntity);
@@ -242,7 +257,7 @@ public class RealEstateInvestService {
                 );
         realEstateInfo.getSupermarkets().stream()
                 .filter(
-                        mt -> supermarketRepository.findByPlaceNameOrAddressName(
+                        mt -> supermarketRepository.findByPlaceNameAndAddressName(
                                 mt.getPlaceName(), mt.getAddressName()) == null
 
                 ).forEach(
@@ -251,7 +266,10 @@ public class RealEstateInvestService {
                             var supermarketAndSupermarketEntity =
                                     realEstateAndSupermarketRepository.save(
                                             new RealEstateAndSupermarket(
-                                                    mt.getDistance(), realEstateEntity, supermarketEntity
+                                                    mt.getDistance(),
+                                                    realEstateEntity.combineNameAndAddress(),
+                                                    supermarketEntity.getPlaceName(),
+                                                    realEstateEntity, supermarketEntity
                                             )
                                     );
                             realEstateEntity.addRealEstateAndSupermarkets(supermarketAndSupermarketEntity);
