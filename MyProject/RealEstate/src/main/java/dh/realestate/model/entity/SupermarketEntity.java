@@ -46,4 +46,12 @@ public class SupermarketEntity extends BaseEntity {
 
         return dto;
     }
+
+    public void updateEntity(RealEstateInfo.Supermarket supermarket) {
+
+        setPlaceName(supermarket.getPlaceName());
+        setAddressName(supermarket.getAddressName());
+        setPlaceUrl(supermarket.getPlaceUrl());
+    }
+
 }

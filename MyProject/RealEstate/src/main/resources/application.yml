@@ -32,8 +32,8 @@ spring:
     # 자동으로 entity 에서 활용하고 있는 테이블들을 생성해줌
     # ddl: data.sql definition language
     generate-ddl: true
-    #hibernate:
-      #ddl-auto: create-drop
+    hibernate:
+      ddl-auto: create-drop
   datasource:
     url: jdbc:mysql://localhost:3306/RealEstate
     username: root

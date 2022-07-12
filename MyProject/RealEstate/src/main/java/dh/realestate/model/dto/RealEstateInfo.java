@@ -98,6 +98,11 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
         return entity;
     }
 
+    public String combineNameAndAddress() {
+        return new StringBuilder()
+                .append(getName()).append(":").append(getAddress()).toString();
+    }
+
     @Override
     public int compareTo(RealEstateInfo realEstateInfo) {
 

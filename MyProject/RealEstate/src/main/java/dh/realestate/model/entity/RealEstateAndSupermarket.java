@@ -2,6 +2,7 @@ package dh.realestate.model.entity;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import dh.realestate.model.dto.RealEstateInfo;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,6 +28,12 @@ public class RealEstateAndSupermarket extends BaseEntity{
     private String realEstate;
     @NonNull
     private String supermarket;
+
+    public void updateEntity(String supermarketName, RealEstateInfo.Supermarket supermarket) {
+        setDistance(supermarket.getDistance());
+        setRealEstate(supermarketName);
+        setSupermarket(supermarket.getPlaceName());
+    }
 
     @NonNull
     @ManyToOne

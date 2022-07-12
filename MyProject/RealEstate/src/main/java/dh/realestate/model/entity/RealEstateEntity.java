@@ -65,18 +65,27 @@ public class RealEstateEntity extends BaseEntity {
                 .supermarkets(new ArrayList<>())
                 .build();
 
-        for (RealEstateAndSubway rssw : getRealEstateAndSubways()) {
-            var subwayDto = rssw.getSubwayEntity().toDto();
-            subwayDto.setDistance(rssw.getDistance());
+        for (RealEstateAndSubway resw : getRealEstateAndSubways()) {
+            var subwayDto = resw.getSubwayEntity().toDto();
+            subwayDto.setDistance(resw.getDistance());
             dto.getSubways().add(subwayDto);
         }
-        for (RealEstateAndSupermarket rsmt : getRealEstateAndSupermarkets()) {
-            var supermarketDto = rsmt.getSupermarketEntity().toDto();
-            supermarketDto.setDistance(rsmt.getDistance());
+        for (RealEstateAndSupermarket remt : getRealEstateAndSupermarkets()) {
+            var supermarketDto = remt.getSupermarketEntity().toDto();
+            supermarketDto.setDistance(remt.getDistance());
             dto.getSupermarkets().add(supermarketDto);
         }
 
         return dto;
+    }
+
+    public void updateEntity(RealEstateInfo realEstateInfo) {
+        setName(realEstateInfo.getName());
+        setAddress(realEstateInfo.getAddress());
+        setType(realEstateInfo.getType());
+        setAreaForExclusiveUse(realEstateInfo.getAreaForExclusiveUse());
+        setMarketPrice(realEstateInfo.getMarketPrice());
+        setBuildYear(realEstateInfo.getBuildYear());
     }
 
 }

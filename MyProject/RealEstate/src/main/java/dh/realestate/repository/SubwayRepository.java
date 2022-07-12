@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SubwayRepository extends JpaRepository<SubwayEntity, Long> {
 
-    SubwayEntity findByPlaceNameOrAddressName(String placeName, String addressName);
+    SubwayEntity findByPlaceNameAndAddressName(String placeName, String addressName);
 }

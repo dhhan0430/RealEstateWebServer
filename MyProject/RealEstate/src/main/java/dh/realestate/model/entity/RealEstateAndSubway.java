@@ -2,6 +2,8 @@ package dh.realestate.model.entity;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import dh.realestate.model.dto.RealEstateInfo;
+import dh.realestate.model.entity.listener.BaseEntityListener;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,6 +17,7 @@ import javax.persistence.*;
 @Entity
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@EntityListeners(value = BaseEntityListener.class)
 public class RealEstateAndSubway extends BaseEntity {
 
     @Id
@@ -27,6 +30,12 @@ public class RealEstateAndSubway extends BaseEntity {
     private String realEstate;
     @NonNull
     private String subway;
+
+    public void updateEntity(String realEstateName, RealEstateInfo.Subway subway) {
+        setDistance(subway.getDistance());
+        setRealEstate(realEstateName);
+        setSubway(subway.getPlaceName());
+    }
 
     @NonNull
     @ManyToOne

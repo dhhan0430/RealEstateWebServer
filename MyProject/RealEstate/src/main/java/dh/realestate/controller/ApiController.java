@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -39,24 +40,26 @@ public class ApiController {
         return realEstateInvestService.add(realEstateInfo);
     }
 
-//    @PutMapping("/update")
-//    public RealEstateDto update(@RequestBody RealEstateDto realEstateDto) {
-//
-//        return realEstateInvestService.update(realEstateDto);
-//    }
-//
-//    @GetMapping("/find/all")
-//    public List<RealEstateDto> findAll() {
-//
-//        return realEstateInvestService.findAll();
-//    }
-//
-//    @DeleteMapping("/delete/{index}")
-//    public void delete(@PathVariable int index) {
-//
-//        realEstateInvestService.delete(index);
-//    }
-//
+    @PutMapping("/update")
+    public RealEstateInfo update(@RequestBody RealEstateInfo realEstateInfo) {
+
+        System.out.println(realEstateInfo);
+
+        return realEstateInvestService.update(realEstateInfo);
+    }
+
+    @GetMapping("/find/all")
+    public List<RealEstateInfo> findList() {
+
+        return realEstateInvestService.findList();
+    }
+
+    @DeleteMapping("/delete/{index}")
+    public RealEstateInfo delete(@PathVariable Long id) {
+
+        return realEstateInvestService.delete(id);
+    }
+
 //    @DeleteMapping("/delete/all")
 //    public void deletaAll() {
 //
