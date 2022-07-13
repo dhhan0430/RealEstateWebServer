@@ -37,6 +37,10 @@ public class SupermarketEntity extends BaseEntity {
         Collections.addAll(this.realEstateAndSupermarkets, realEstateAndSupermarkets);
     }
 
+    public void deleteRealEstateAndSupermarket(RealEstateAndSupermarket realEstateAndSupermarket) {
+        realEstateAndSupermarkets.remove(realEstateAndSupermarket);
+    }
+
     public RealEstateInfo.Supermarket toDto() {
         var dto = RealEstateInfo.Supermarket.builder()
                 .placeName(getPlaceName())

@@ -37,13 +37,11 @@ public class RealEstateAndSubway extends BaseEntity {
         setSubway(subway.getPlaceName());
     }
 
-    @NonNull
     @ManyToOne
     @JoinColumn(name = "real_estate_id")
     @ToString.Exclude
     private RealEstateEntity realEstateEntity;
 
-    @NonNull
     @ManyToOne
     @JoinColumn(name = "subway_id")
     @ToString.Exclude

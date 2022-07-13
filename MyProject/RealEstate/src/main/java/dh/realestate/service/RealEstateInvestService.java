@@ -191,12 +191,13 @@ public class RealEstateInvestService {
                             subwayEntity.updateEntity(sw);
                             var realEstateAndSubwayEntity =
                                     realEstateAndSubwayRepository.save(
-                                            new RealEstateAndSubway(
-                                                    sw.getDistance(),
-                                                    realEstateEntity.combineNameAndAddress(),
-                                                    subwayEntity.getPlaceName(),
-                                                    realEstateEntity, subwayEntity
-                                            )
+                                            RealEstateAndSubway.builder()
+                                                    .distance(sw.getDistance())
+                                                    .realEstate(realEstateEntity.combineNameAndAddress())
+                                                    .subway(subwayEntity.getPlaceName())
+                                                    .realEstateEntity(realEstateEntity)
+                                                    .subwayEntity(subwayEntity)
+                                                    .build()
                                     );
                             realEstateEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
                             subwayEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
@@ -212,12 +213,13 @@ public class RealEstateInvestService {
                             var subwayEntity = subwayRepository.save(sw.toEntity());
                             var realEstateAndSubwayEntity =
                                     realEstateAndSubwayRepository.save(
-                                            new RealEstateAndSubway(
-                                                    sw.getDistance(),
-                                                    realEstateEntity.combineNameAndAddress(),
-                                                    subwayEntity.getPlaceName(),
-                                                    realEstateEntity, subwayEntity
-                                            )
+                                            RealEstateAndSubway.builder()
+                                                    .distance(sw.getDistance())
+                                                    .realEstate(realEstateEntity.combineNameAndAddress())
+                                                    .subway(subwayEntity.getPlaceName())
+                                                    .realEstateEntity(realEstateEntity)
+                                                    .subwayEntity(subwayEntity)
+                                                    .build()
                                     );
                             realEstateEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
                             subwayEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
@@ -246,12 +248,13 @@ public class RealEstateInvestService {
                             supermarketEntity.updateEntity(mt);
                             var realEstateAndSupermarketEntity =
                                     realEstateAndSupermarketRepository.save(
-                                            new RealEstateAndSupermarket(
-                                                    mt.getDistance(),
-                                                    realEstateEntity.combineNameAndAddress(),
-                                                    supermarketEntity.getPlaceName(),
-                                                    realEstateEntity, supermarketEntity
-                                            )
+                                            RealEstateAndSupermarket.builder()
+                                                    .distance(mt.getDistance())
+                                                    .realEstate(realEstateEntity.combineNameAndAddress())
+                                                    .supermarket(supermarketEntity.getPlaceName())
+                                                    .realEstateEntity(realEstateEntity)
+                                                    .supermarketEntity(supermarketEntity)
+                                                    .build()
                                     );
                             realEstateEntity.addRealEstateAndSupermarkets(realEstateAndSupermarketEntity);
                             supermarketEntity.addRealEstateAndSupermarkets(realEstateAndSupermarketEntity);
@@ -268,12 +271,13 @@ public class RealEstateInvestService {
                             var supermarketEntity = supermarketRepository.save(mt.toEntity());
                             var supermarketAndSupermarketEntity =
                                     realEstateAndSupermarketRepository.save(
-                                            new RealEstateAndSupermarket(
-                                                    mt.getDistance(),
-                                                    realEstateEntity.combineNameAndAddress(),
-                                                    supermarketEntity.getPlaceName(),
-                                                    realEstateEntity, supermarketEntity
-                                            )
+                                            RealEstateAndSupermarket.builder()
+                                                    .distance(mt.getDistance())
+                                                    .realEstate(realEstateEntity.combineNameAndAddress())
+                                                    .supermarket(supermarketEntity.getPlaceName())
+                                                    .realEstateEntity(realEstateEntity)
+                                                    .supermarketEntity(supermarketEntity)
+                                                    .build()
                                     );
                             realEstateEntity.addRealEstateAndSupermarkets(supermarketAndSupermarketEntity);
                             supermarketEntity.addRealEstateAndSupermarkets(supermarketAndSupermarketEntity);
@@ -292,17 +296,16 @@ public class RealEstateInvestService {
 
         var realEstateEntity = realEstateRepository.findById(id).get();
         realEstateEntity.updateEntity(realEstateInfo);
-        updateRealEstateAndSubway(realEstateEntity, realEstateInfo, realEstateEntity.getRealEstateAndSubways());
+        updateRealEstateAndSubway(realEstateInfo, realEstateEntity);
 
         realEstateRepository.save(realEstateEntity);
 
         return null;
     }
 
-    public void updateRealEstateAndSubway(RealEstateEntity realEstateEntity,
-                                          RealEstateInfo realEstateInfo,
-                                          List<RealEstateAndSubway> realEstateAndSubwayList) {
+    public void updateRealEstateAndSubway(RealEstateInfo realEstateInfo, RealEstateEntity realEstateEntity) {
 
+        List<RealEstateAndSubway> realEstateAndSubwayList = realEstateEntity.getRealEstateAndSubways();
         var entityReswCnt = realEstateAndSubwayList.size();
         boolean[] updateCheck = new boolean[entityReswCnt];
         Arrays.fill(updateCheck, false);
@@ -346,12 +349,13 @@ public class RealEstateInvestService {
 
                 var realEstateAndSubwayEntity =
                         realEstateAndSubwayRepository.save(
-                                new RealEstateAndSubway(
-                                        sw.getDistance(),
-                                        realEstateEntity.combineNameAndAddress(),
-                                        subwayEntity.getPlaceName(),
-                                        realEstateEntity, subwayEntity
-                                )
+                                RealEstateAndSubway.builder()
+                                        .distance(sw.getDistance())
+                                        .realEstate(realEstateEntity.combineNameAndAddress())
+                                        .subway(subwayEntity.getPlaceName())
+                                        .realEstateEntity(realEstateEntity)
+                                        .subwayEntity(subwayEntity)
+                                        .build()
                         );
                 realEstateEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
                 subwayEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
@@ -360,10 +364,10 @@ public class RealEstateInvestService {
 
         }
 
-        for (int i = 0; i < entityReswCnt; i++) {
-            if (!updateCheck[i])
-                deleteRealEstateAndSubway(id??);
-        }
+//        for (int i = 0; i < entityReswCnt; i++) {
+//            if (!updateCheck[i])
+//                //deleteRealEstateAndSubway();
+//        }
 
     }
 
@@ -384,10 +388,14 @@ public class RealEstateInvestService {
         var realEstateInfo = realEstateEntity.toDto();
 
         for (RealEstateAndSubway resw : realEstateEntity.getRealEstateAndSubways()) {
-            deleteRealEstateAndSubway(resw);
+            realEstateEntity.deleteRealEstateAndSubway(resw);
+            resw.getSubwayEntity().deleteRealEstateAndSubway(resw);
+            deleteRealEstateAndSubwayFromDb(resw);
         }
         for (RealEstateAndSupermarket remt : realEstateEntity.getRealEstateAndSupermarkets()) {
-            deleteRealEstateAndSupermarket(remt);
+            realEstateEntity.deleteRealEstateAndSupermarket(remt);
+            remt.getSupermarketEntity().deleteRealEstateAndSupermarket(remt);
+            deleteRealEstateAndSupermarketFromDb(remt);
         }
 
         realEstateRepository.delete(realEstateEntity);
@@ -396,18 +404,18 @@ public class RealEstateInvestService {
     }
 
 
-    public void deleteRealEstateAndSubway(RealEstateAndSubway realEstateAndSubway) {
-        var subwayEntityId = realEstateAndSubway.getSubwayEntity().getId();
+    public void deleteRealEstateAndSubwayFromDb(RealEstateAndSubway realEstateAndSubway) {
+        var subwayEntity = realEstateAndSubway.getSubwayEntity();
         realEstateAndSubwayRepository.delete(realEstateAndSubway);
-        if (subwayRepository.findById(subwayEntityId).get().getRealEstateAndSubways().isEmpty())
-            subwayRepository.deleteById(subwayEntityId);
+        if (subwayEntity.getRealEstateAndSubways().isEmpty())
+            subwayRepository.delete(subwayEntity);
     }
 
-    public void deleteRealEstateAndSupermarket(RealEstateAndSupermarket realEstateAndSupermarket) {
-        var supermarketId = realEstateAndSupermarket.getSupermarketEntity().getId();
+    public void deleteRealEstateAndSupermarketFromDb(RealEstateAndSupermarket realEstateAndSupermarket) {
+        var supermarketEntity = realEstateAndSupermarket.getSupermarketEntity();
         realEstateAndSupermarketRepository.delete(realEstateAndSupermarket);
-        if(supermarketRepository.findById(supermarketId).get().getRealEstateAndSupermarkets().isEmpty())
-            supermarketRepository.deleteById(supermarketId);
+        if(supermarketEntity.getRealEstateAndSupermarkets().isEmpty())
+            supermarketRepository.delete(supermarketEntity);
     }
 
 

@@ -35,13 +35,11 @@ public class RealEstateAndSupermarket extends BaseEntity{
         setSupermarket(supermarket.getPlaceName());
     }
 
-    @NonNull
     @ManyToOne
     @JoinColumn(name = "real_estate_id")
     @ToString.Exclude
     private RealEstateEntity realEstateEntity;
 
-    @NonNull
     @ManyToOne
     @JoinColumn(name = "supermarket_id")
     @ToString.Exclude

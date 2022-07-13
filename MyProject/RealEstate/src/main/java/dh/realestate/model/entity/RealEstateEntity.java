@@ -47,6 +47,14 @@ public class RealEstateEntity extends BaseEntity {
         Collections.addAll(this.realEstateAndSupermarkets, realEstateAndSupermarkets);
     }
 
+    public void deleteRealEstateAndSubway(RealEstateAndSubway realEstateAndSubway) {
+        realEstateAndSubways.remove(realEstateAndSubway);
+    }
+
+    public void deleteRealEstateAndSupermarket(RealEstateAndSupermarket realEstateAndSupermarket) {
+        realEstateAndSupermarkets.remove(realEstateAndSupermarket);
+    }
+
     public String combineNameAndAddress() {
         return new StringBuilder()
                 .append(getName()).append(":").append(getAddress()).toString();

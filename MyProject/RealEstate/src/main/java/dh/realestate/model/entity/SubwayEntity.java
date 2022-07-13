@@ -37,6 +37,10 @@ public class SubwayEntity extends BaseEntity {
         Collections.addAll(this.realEstateAndSubways, realEstateAndSubways);
     }
 
+    public void deleteRealEstateAndSubway(RealEstateAndSubway realEstateAndSubway) {
+        realEstateAndSubways.remove(realEstateAndSubway);
+    }
+
     public RealEstateInfo.Subway toDto() {
         var dto = RealEstateInfo.Subway.builder()
                 .placeName(getPlaceName())

@@ -1,6 +1,8 @@
 package dh.realestate.service;
 
 import dh.realestate.model.dto.RealEstateInfo;
+import dh.realestate.model.entity.RealEstateAndSubway;
+import dh.realestate.model.entity.RealEstateEntity;
 import dh.realestate.repository.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -117,6 +120,88 @@ class RealEstateInvestServiceTest {
         System.out.println("*RealEstateAndSupermarket Repo: "); realEstateAndSupermarketRepository.findAll().forEach(System.out::println);
         System.out.println("*Supermarket Repo: "); supermarketRepository.findAll().forEach(System.out::println);
         System.out.println("-----------------------------------------------------------------------------/");
+    }
+
+    @Test
+    @Transactional
+    public void test() {
+
+        var realEstateEntity1 = new RealEstateEntity();
+        realEstateEntity1.setName("부동산1");
+
+        var realEstateAndSubway1 = new RealEstateAndSubway();
+        realEstateAndSubway1.setRealEstate("부동산1");
+        realEstateAndSubway1.setSubway("신논현역 9호선");
+        realEstateAndSubway1.setRealEstateEntity(realEstateEntity1);
+        realEstateAndSubway1 = realEstateAndSubwayRepository.save(realEstateAndSubway1);
+
+        var realEstateAndSubway2 = new RealEstateAndSubway();
+        realEstateAndSubway2.setRealEstate("부동산2");
+        realEstateAndSubway2.setSubway("신논현역 신분당선");
+        realEstateAndSubway2.setRealEstateEntity(realEstateEntity1);
+        realEstateAndSubway2 = realEstateAndSubwayRepository.save(realEstateAndSubway2);
+
+        var realEstateAndSubway3 = new RealEstateAndSubway();
+        realEstateAndSubway3.setRealEstate("부동산3");
+        realEstateAndSubway3.setSubway("논현역 7호선");
+        realEstateAndSubway3.setRealEstateEntity(realEstateEntity1);
+        realEstateAndSubway3 = realEstateAndSubwayRepository.save(realEstateAndSubway3);
+
+        var realEstateAndSubway4 = new RealEstateAndSubway();
+        realEstateAndSubway4.setRealEstate("부동산4");
+        realEstateAndSubway4.setSubway("논현역 신분당선");
+        realEstateAndSubway4.setRealEstateEntity(realEstateEntity1);
+        realEstateAndSubway4 = realEstateAndSubwayRepository.save(realEstateAndSubway4);
+
+        realEstateEntity1.addRealEstateAndSubways(realEstateAndSubway1, realEstateAndSubway2,
+                realEstateAndSubway3, realEstateAndSubway4);
+        realEstateRepository.save(realEstateEntity1);
+
+
+        boolean check[] = new boolean[4];
+        Arrays.fill(check, false);
+        check[1] = true; check[3] = true;
+        var cnt = realEstateEntity1.getRealEstateAndSubways().size();
+        realEstateEntity1.getRealEstateAndSubways().stream().forEach(System.out::println);
+        System.out.println("-----------------------------------------------------");
+
+        for (int i=cnt-1; i>=0; i--) {
+            System.out.println("current idx: " + i);
+            if (check[i] == false) {
+                System.out.println("delete idx: " + i);
+                var entity = realEstateEntity1.getRealEstateAndSubways().get(i);
+                //entity.setRealEstateEntity(null);
+                realEstateAndSubwayRepository.delete(entity);
+                System.out.println("delete: " + entity);
+                realEstateEntity1.getRealEstateAndSubways().remove(entity);
+                //entityManager.flush();
+            }
+
+            realEstateEntity1.getRealEstateAndSubways().stream().forEach(System.out::println);
+            for (int j = 0; j < realEstateEntity1.getRealEstateAndSubways().size(); j++) {
+                System.out.println("idx(" + j + "): " + realEstateEntity1.getRealEstateAndSubways().get(j));
+            }
+            System.out.println("-----------------------------------------------------");
+
+        }
+        entityManager.flush();
+
+        System.out.println("findAll():");
+        realEstateAndSubwayRepository.findAll().forEach(System.out::println);
+        System.out.println("-----------------------------------------------------");
+
+        var realEstateEntity_found = realEstateRepository.findById(1L).get();
+        realEstateEntity_found.getRealEstateAndSubways().stream().forEach(System.out::println);
+        System.out.println("-----------------------------------------------------");
+
+//        realEstateEntity_found.getRealEstateAndSubways().stream().forEach(
+//                it -> {
+//                    System.out.println("id: " + it.getId());
+//                    var entity = realEstateAndSubwayRepository.findById(it.getId()).get();
+//                    System.out.println(entity);
+//                }
+//                );
+
     }
 
 }
