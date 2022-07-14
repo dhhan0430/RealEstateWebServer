@@ -87,13 +87,15 @@ public class RealEstateEntity extends BaseEntity {
         return dto;
     }
 
-    public void updateEntity(RealEstateInfo realEstateInfo) {
+    public RealEstateEntity updateEntity(RealEstateInfo realEstateInfo) {
         setName(realEstateInfo.getName());
         setAddress(realEstateInfo.getAddress());
         setType(realEstateInfo.getType());
         setAreaForExclusiveUse(realEstateInfo.getAreaForExclusiveUse());
         setMarketPrice(realEstateInfo.getMarketPrice());
         setBuildYear(realEstateInfo.getBuildYear());
+
+        return this;
     }
 
 }

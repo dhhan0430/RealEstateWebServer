@@ -29,10 +29,12 @@ public class RealEstateAndSupermarket extends BaseEntity{
     @NonNull
     private String supermarket;
 
-    public void updateEntity(String supermarketName, RealEstateInfo.Supermarket supermarket) {
+    public RealEstateAndSupermarket updateEntity(RealEstateInfo realEstateInfo, RealEstateInfo.Supermarket supermarket) {
         setDistance(supermarket.getDistance());
-        setRealEstate(supermarketName);
+        setRealEstate(realEstateInfo.getName());
         setSupermarket(supermarket.getPlaceName());
+
+        return this;
     }
 
     @ManyToOne

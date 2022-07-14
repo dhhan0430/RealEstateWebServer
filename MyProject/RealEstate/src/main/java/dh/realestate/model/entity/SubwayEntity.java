@@ -51,10 +51,12 @@ public class SubwayEntity extends BaseEntity {
         return dto;
     }
 
-    public void updateEntity(RealEstateInfo.Subway subway) {
+    public SubwayEntity updateEntity(RealEstateInfo.Subway subway) {
 
         setPlaceName(subway.getPlaceName());
         setAddressName(subway.getAddressName());
         setPlaceUrl(subway.getPlaceUrl());
+
+        return this;
     }
 }

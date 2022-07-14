@@ -57,6 +57,16 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
 
             return entity;
         }
+
+        public boolean equalsTo(SubwayEntity subwayEntity) {
+            if (getPlaceName().equals(subwayEntity.getPlaceName()) &&
+                    getAddressName().equals(subwayEntity.getAddressName())) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
     }
 
     @Builder
@@ -80,6 +90,16 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
                     .build();
 
             return entity;
+        }
+
+        public boolean equalsTo(SupermarketEntity supermarketEntity) {
+            if (getPlaceName().equals(supermarketEntity.getPlaceName()) &&
+                    getAddressName().equals(supermarketEntity.getAddressName())) {
+                return true;
+            }
+            else {
+                return false;
+            }
         }
     }
 

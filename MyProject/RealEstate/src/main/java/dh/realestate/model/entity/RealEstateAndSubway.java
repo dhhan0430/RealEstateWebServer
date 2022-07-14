@@ -31,10 +31,12 @@ public class RealEstateAndSubway extends BaseEntity {
     @NonNull
     private String subway;
 
-    public void updateEntity(String realEstateName, RealEstateInfo.Subway subway) {
+    public RealEstateAndSubway updateEntity(RealEstateInfo realEstateInfo, RealEstateInfo.Subway subway) {
         setDistance(subway.getDistance());
-        setRealEstate(realEstateName);
+        setRealEstate(realEstateInfo.getName());
         setSubway(subway.getPlaceName());
+
+        return this;
     }
 
     @ManyToOne
