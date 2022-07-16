@@ -35,7 +35,7 @@ public class ApiController {
     @PostMapping("/add")
     public RealEstateInfo add(@RequestBody RealEstateInfo realEstateInfo) {
 
-        System.out.println(realEstateInfo);
+        log.info("{}", realEstateInfo);
 
         return realEstateInvestService.add(realEstateInfo);
     }
@@ -43,7 +43,7 @@ public class ApiController {
     @PutMapping("/update")
     public RealEstateInfo update(@RequestBody RealEstateInfo realEstateInfo) {
 
-        System.out.println(realEstateInfo);
+        log.info("{}", realEstateInfo);
 
         return realEstateInvestService.update(realEstateInfo);
     }
@@ -54,16 +54,18 @@ public class ApiController {
         return realEstateInvestService.findList();
     }
 
-    @DeleteMapping("/delete/{index}")
+    @DeleteMapping("/delete/{id}")
     public RealEstateInfo delete(@PathVariable Long id) {
+
+        log.info("{}", id);
 
         return realEstateInvestService.delete(id);
     }
 
-//    @DeleteMapping("/delete/all")
-//    public void deletaAll() {
-//
-//        realEstateInvestService.deleteAll();
-//    }
+    @DeleteMapping("/delete/all")
+    public void deleteAll() {
+
+        realEstateInvestService.deleteAll();
+    }
 
 }

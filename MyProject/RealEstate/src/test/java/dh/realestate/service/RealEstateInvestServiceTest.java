@@ -124,7 +124,7 @@ class RealEstateInvestServiceTest {
 
     @Test
     @Transactional
-    public void test() {
+    public void relationDeleteTest() {
 
         var realEstateEntity1 = new RealEstateEntity();
         realEstateEntity1.setName("부동산1");
@@ -194,13 +194,6 @@ class RealEstateInvestServiceTest {
         realEstateEntity_found.getRealEstateAndSubways().stream().forEach(System.out::println);
         System.out.println("-----------------------------------------------------");
 
-//        realEstateEntity_found.getRealEstateAndSubways().stream().forEach(
-//                it -> {
-//                    System.out.println("id: " + it.getId());
-//                    var entity = realEstateAndSubwayRepository.findById(it.getId()).get();
-//                    System.out.println(entity);
-//                }
-//                );
 
     }
 
