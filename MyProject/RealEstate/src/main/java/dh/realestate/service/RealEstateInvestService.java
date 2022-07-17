@@ -4,6 +4,7 @@ import dh.realestate.model.dto.RealEstateInfo;
 import dh.realestate.model.dto.RealEstateList;
 
 import dh.realestate.model.entity.*;
+import dh.realestate.model.entity.idgenerator.IdGenerator;
 import dh.realestate.repository.*;
 import dh.realestate.service.kakaomap.KakaoMapClient;
 import dh.realestate.service.kakaomap.dto.KakaoMapCategoryRes;
@@ -15,7 +16,9 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.FileNotFoundException;
@@ -143,7 +146,11 @@ public class RealEstateInvestService {
         }
     }
 
+    @Transactional
     public RealEstateInfo add(@RequestBody RealEstateInfo realEstateInfo) {
+
+        IdGenerator<RealEstateEntity, Long> reIdGenerator = new IdGenerator<>();
+        reIdGenerator.setJpaRepository(realEstateRepository);
 
         if (realEstateRepository.findByNameAndAddressAndTypeAndAreaForExclusiveUse(
                 realEstateInfo.getName(), realEstateInfo.getAddress(),
@@ -151,9 +158,9 @@ public class RealEstateInvestService {
             return null;
         }
 
-        var realEstateEntity = realEstateRepository.save(
-                realEstateInfo.toEntity()
-        );
+        var realEstateEntity = realEstateInfo.toEntity();
+        realEstateEntity.setId(reIdGenerator.generateId());
+        realEstateEntity = realEstateRepository.save(realEstateEntity);
 
         if (realEstateInfo.getSubways().size() > 0) {
             saveAllRealEstateAndSubway(realEstateInfo, realEstateEntity);
@@ -168,7 +175,8 @@ public class RealEstateInvestService {
 
     public void saveAllRealEstateAndSubway(
             RealEstateInfo realEstateInfo, RealEstateEntity realEstateEntity) {
-
+        IdGenerator<SubwayEntity, Long> swIdGenerator = new IdGenerator<>();
+        swIdGenerator.setJpaRepository(subwayRepository);
         List<SubwayEntity> subwayEntityList = new ArrayList<>();
 
         realEstateInfo.getSubways().stream()
@@ -192,7 +200,9 @@ public class RealEstateInvestService {
                                 sw.getPlaceName(), sw.getAddressName()) == null
                 ).forEach(
                         sw -> {
-                            var subwayEntity = subwayRepository.save(sw.toEntity());
+                            var subwayEntity = sw.toEntity();
+                            subwayEntity.setId(swIdGenerator.generateId());
+                            subwayEntity = subwayRepository.save(subwayEntity);
                             associateRealEstateWithSubway(realEstateEntity, subwayEntity, sw);
                             subwayEntityList.add(subwayEntity);
                         }
@@ -204,23 +214,26 @@ public class RealEstateInvestService {
     public void associateRealEstateWithSubway(RealEstateEntity realEstateEntity,
                                               SubwayEntity subwayEntity,
                                               RealEstateInfo.Subway subway) {
-        var realEstateAndSubwayEntity =
-                realEstateAndSubwayRepository.save(
-                        RealEstateAndSubway.builder()
-                                .distance(subway.getDistance())
-                                .realEstate(realEstateEntity.combineNameAndAddress())
-                                .subway(subwayEntity.getPlaceName())
-                                .realEstateEntity(realEstateEntity)
-                                .subwayEntity(subwayEntity)
-                                .build()
-                );
+        IdGenerator<RealEstateAndSubway, Long> reswIdGenerator = new IdGenerator<>();
+        reswIdGenerator.setJpaRepository(realEstateAndSubwayRepository);
+
+        var realEstateAndSubwayEntity = RealEstateAndSubway.builder()
+                .distance(subway.getDistance())
+                .realEstate(realEstateEntity.combineNameAndAddress())
+                .subway(subwayEntity.getPlaceName())
+                .realEstateEntity(realEstateEntity)
+                .subwayEntity(subwayEntity)
+                .build();
+        realEstateAndSubwayEntity.setId(reswIdGenerator.generateId());
+        realEstateAndSubwayEntity = realEstateAndSubwayRepository.save(realEstateAndSubwayEntity);
         realEstateEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
         subwayEntity.addRealEstateAndSubways(realEstateAndSubwayEntity);
     }
 
     public void saveAllRealEstateAndSupermarket(
             RealEstateInfo realEstateInfo, RealEstateEntity realEstateEntity) {
-
+        IdGenerator<SupermarketEntity, Long> mtIdGenerator = new IdGenerator<>();
+        mtIdGenerator.setJpaRepository(supermarketRepository);
         List<SupermarketEntity> supermarketEntityList = new ArrayList<>();
 
         realEstateInfo.getSupermarkets().stream()
@@ -245,7 +258,9 @@ public class RealEstateInvestService {
 
                 ).forEach(
                         mt -> {
-                            var supermarketEntity = supermarketRepository.save(mt.toEntity());
+                            var supermarketEntity = mt.toEntity();
+                            supermarketEntity.setId(mtIdGenerator.generateId());
+                            supermarketEntity = supermarketRepository.save(supermarketEntity);
                             associateRealEstateWithSupermarket(realEstateEntity, supermarketEntity, mt);
                             supermarketEntityList.add(supermarketEntity);
                         }
@@ -257,20 +272,23 @@ public class RealEstateInvestService {
     public void associateRealEstateWithSupermarket(RealEstateEntity realEstateEntity,
                                                    SupermarketEntity supermarketEntity,
                                                    RealEstateInfo.Supermarket supermarket) {
-        var realEstateAndSupermarketEntity =
-                realEstateAndSupermarketRepository.save(
-                        RealEstateAndSupermarket.builder()
-                                .distance(supermarket.getDistance())
-                                .realEstate(realEstateEntity.combineNameAndAddress())
-                                .supermarket(supermarketEntity.getPlaceName())
-                                .realEstateEntity(realEstateEntity)
-                                .supermarketEntity(supermarketEntity)
-                                .build()
-                );
+        IdGenerator<RealEstateAndSupermarket, Long> remtIdGenerator = new IdGenerator<>();
+        remtIdGenerator.setJpaRepository(realEstateAndSupermarketRepository);
+
+        var realEstateAndSupermarketEntity = RealEstateAndSupermarket.builder()
+                .distance(supermarket.getDistance())
+                .realEstate(realEstateEntity.combineNameAndAddress())
+                .supermarket(supermarketEntity.getPlaceName())
+                .realEstateEntity(realEstateEntity)
+                .supermarketEntity(supermarketEntity)
+                .build();
+        realEstateAndSupermarketEntity.setId(remtIdGenerator.generateId());
+        realEstateAndSupermarketEntity = realEstateAndSupermarketRepository.save(realEstateAndSupermarketEntity);
         realEstateEntity.addRealEstateAndSupermarkets(realEstateAndSupermarketEntity);
         supermarketEntity.addRealEstateAndSupermarkets(realEstateAndSupermarketEntity);
     }
 
+    @Transactional
     public RealEstateInfo update(@RequestBody RealEstateInfo realEstateInfo) {
 
         var id = realEstateInfo.getId();
@@ -283,11 +301,12 @@ public class RealEstateInvestService {
         updateRealEstateAndSupermarket(realEstateInfo, realEstateEntity);
 
         realEstateRepository.save(realEstateEntity);
-
-        return null;
+        return realEstateEntity.toDto();
     }
 
     public void updateRealEstateAndSubway(RealEstateInfo realEstateInfo, RealEstateEntity realEstateEntity) {
+        IdGenerator<SubwayEntity, Long> swIdGenerator = new IdGenerator<>();
+        swIdGenerator.setJpaRepository(subwayRepository);
         List<RealEstateAndSubway> realEstateAndSubwayList = realEstateEntity.getRealEstateAndSubways();
         List<RealEstateAndSubway> deleteRealEstateAndSubwayList = new ArrayList<>();
         deleteRealEstateAndSubwayList.addAll(realEstateAndSubwayList);
@@ -303,7 +322,7 @@ public class RealEstateInvestService {
                     subwayRepository.save(subwayEntity.updateEntity(sw));
 
                     resw = realEstateAndSubwayRepository.findByRealEstateAndSubway(
-                            realEstateInfo.getName(), sw.getPlaceName());
+                            realEstateInfo.combineNameAndAddress(), sw.getPlaceName());
                     realEstateAndSubwayRepository.save(resw.updateEntity(realEstateInfo, sw));
 
                     find = true;
@@ -318,7 +337,9 @@ public class RealEstateInvestService {
                         subwayRepository.findByPlaceNameAndAddressName(sw.getPlaceName(), sw.getAddressName());
                 // 해당 subway가 subway repository에 없을 때,
                 if (subwayEntity == null) {
-                    subwayEntity = subwayRepository.save(sw.toEntity());
+                    subwayEntity = sw.toEntity();
+                    subwayEntity.setId(swIdGenerator.generateId());
+                    subwayEntity = subwayRepository.save(subwayEntity);
                 }
 
                 associateRealEstateWithSubway(realEstateEntity, subwayEntity, sw);
@@ -329,11 +350,14 @@ public class RealEstateInvestService {
         // 업데이트 목록에 없는 subway들을 제거
         Iterator reswIterator = deleteRealEstateAndSubwayList.iterator();
         while(reswIterator.hasNext()) {
-            deleteRealEstateAndSubway(reswIterator);
+            deleteRealEstateAndSubway(reswIterator, false);
         }
+
     }
 
     public void updateRealEstateAndSupermarket(RealEstateInfo realEstateInfo, RealEstateEntity realEstateEntity) {
+        IdGenerator<SupermarketEntity, Long> mtIdGenerator = new IdGenerator<>();
+        mtIdGenerator.setJpaRepository(supermarketRepository);
         List<RealEstateAndSupermarket> realEstateAndSupermarketList = realEstateEntity.getRealEstateAndSupermarkets();
         List<RealEstateAndSupermarket> deleteRealEstateAndSupermarketList = new ArrayList<>();
         deleteRealEstateAndSupermarketList.addAll(realEstateAndSupermarketList);
@@ -349,7 +373,7 @@ public class RealEstateInvestService {
                     supermarketRepository.save(supermarketEntity.updateEntity(mt));
 
                     remt = realEstateAndSupermarketRepository.findByRealEstateAndSupermarket(
-                            realEstateInfo.getName(), mt.getPlaceName());
+                            realEstateInfo.combineNameAndAddress(), mt.getPlaceName());
                     realEstateAndSupermarketRepository.save(remt.updateEntity(realEstateInfo, mt));
 
                     find = true;
@@ -364,7 +388,9 @@ public class RealEstateInvestService {
                         supermarketRepository.findByPlaceNameAndAddressName(mt.getPlaceName(), mt.getAddressName());
                 // 해당 supermarket가 supermarket repository에 없을 때,
                 if (supermarketEntity == null) {
-                    supermarketEntity = supermarketRepository.save(mt.toEntity());
+                    supermarketEntity = mt.toEntity();
+                    supermarketEntity.setId(mtIdGenerator.generateId());
+                    supermarketEntity = supermarketRepository.save(supermarketEntity);
                 }
 
                 associateRealEstateWithSupermarket(realEstateEntity, supermarketEntity, mt);
@@ -375,7 +401,7 @@ public class RealEstateInvestService {
         // 업데이트 목록에 없는 supermarket들을 제거
         Iterator remtIterator = deleteRealEstateAndSupermarketList.iterator();
         while(remtIterator.hasNext()) {
-            deleteRealEstateAndSupermarket(remtIterator);
+            deleteRealEstateAndSupermarket(remtIterator, false);
         }
     }
 
@@ -386,14 +412,16 @@ public class RealEstateInvestService {
         return realEstateInfoList;
     }
 
+    @Transactional
     public void deleteAll() {
         realEstateAndSubwayRepository.deleteAll();
-        realEstateAndSupermarketRepository.deleteAll();
         subwayRepository.deleteAll();;
+        realEstateAndSupermarketRepository.deleteAll();
         supermarketRepository.deleteAll();
         realEstateRepository.deleteAll();
     }
 
+    @Transactional
     public RealEstateInfo delete(Long id) {
         if (id == null || !realEstateRepository.existsById(id))
             return null;
@@ -403,25 +431,28 @@ public class RealEstateInvestService {
 
         log.info("List of RealEstateAndSubway: {}", realEstateEntity.getRealEstateAndSubways());
         Iterator reswIterator = realEstateEntity.getRealEstateAndSubways().iterator();
-        while(reswIterator.hasNext()) {
-            deleteRealEstateAndSubway(reswIterator);
+        while (reswIterator.hasNext()) {
+            deleteRealEstateAndSubway(reswIterator, true);
         }
         log.info("List of RealEstateAndSupermarket: {}", realEstateEntity.getRealEstateAndSubways());
         Iterator remtIterator = realEstateEntity.getRealEstateAndSupermarkets().iterator();
-        while(remtIterator.hasNext()) {
-            deleteRealEstateAndSupermarket(remtIterator);
+        while (remtIterator.hasNext()) {
+            deleteRealEstateAndSupermarket(remtIterator, true);
         }
 
         realEstateRepository.delete(realEstateEntity);
         return realEstateInfo;
     }
 
-    public void deleteRealEstateAndSubway(Iterator iter) {
+    public void deleteRealEstateAndSubway(Iterator iter, boolean selfLoop) {
         var realEstateAndSubway = (RealEstateAndSubway)iter.next();
         var subwayEntity = realEstateAndSubway.getSubwayEntity();
-        iter.remove();
-        subwayEntity.deleteRealEstateAndSubway(realEstateAndSubway);
 
+        if (selfLoop)
+            iter.remove();
+        else
+            realEstateAndSubway.getRealEstateEntity().deleteRealEstateAndSubway(realEstateAndSubway);
+        subwayEntity.deleteRealEstateAndSubway(realEstateAndSubway);
         realEstateAndSubwayRepository.delete(realEstateAndSubway);
 
         if (subwayEntity.getRealEstateAndSubways().isEmpty()) {
@@ -429,15 +460,18 @@ public class RealEstateInvestService {
         }
     }
 
-    public void deleteRealEstateAndSupermarket(Iterator iter) {
+    public void deleteRealEstateAndSupermarket(Iterator iter, boolean selfLoop) {
         var realEstateAndSupermarket = (RealEstateAndSupermarket)iter.next();
         var supermarketEntity = realEstateAndSupermarket.getSupermarketEntity();
-        iter.remove();
-        supermarketEntity.deleteRealEstateAndSupermarket(realEstateAndSupermarket);
 
+        if (selfLoop)
+            iter.remove();
+        else
+            realEstateAndSupermarket.getRealEstateEntity().deleteRealEstateAndSupermarket(realEstateAndSupermarket);
+        supermarketEntity.deleteRealEstateAndSupermarket(realEstateAndSupermarket);
         realEstateAndSupermarketRepository.delete(realEstateAndSupermarket);
 
-        if(supermarketEntity.getRealEstateAndSupermarkets().isEmpty())
+        if (supermarketEntity.getRealEstateAndSupermarkets().isEmpty())
             supermarketRepository.delete(supermarketEntity);
     }
 

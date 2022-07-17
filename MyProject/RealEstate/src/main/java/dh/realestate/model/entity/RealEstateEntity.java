@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class RealEstateEntity extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     //@Column(name = "real_estate_id")
     private Long id;                        // id
     private String name;                    // name

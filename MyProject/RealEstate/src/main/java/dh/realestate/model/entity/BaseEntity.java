@@ -6,16 +6,16 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @MappedSuperclass
 //@EntityListeners(value = AuditingEntityListener.class)
 @EntityListeners(value = BaseEntityListener.class)
-public class BaseEntity implements Auditable {
+public abstract class BaseEntity implements Auditable {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -24,4 +24,6 @@ public class BaseEntity implements Auditable {
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    public abstract Long getId();
 }

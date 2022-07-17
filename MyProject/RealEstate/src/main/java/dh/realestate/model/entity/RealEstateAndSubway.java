@@ -21,7 +21,7 @@ import javax.persistence.*;
 public class RealEstateAndSubway extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
@@ -33,7 +33,7 @@ public class RealEstateAndSubway extends BaseEntity {
 
     public RealEstateAndSubway updateEntity(RealEstateInfo realEstateInfo, RealEstateInfo.Subway subway) {
         setDistance(subway.getDistance());
-        setRealEstate(realEstateInfo.getName());
+        setRealEstate(realEstateInfo.combineNameAndAddress());
         setSubway(subway.getPlaceName());
 
         return this;

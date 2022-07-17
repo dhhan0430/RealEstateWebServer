@@ -22,7 +22,7 @@ import java.util.List;
 public class SubwayEntity extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String placeName;
     private String addressName;

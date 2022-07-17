@@ -19,7 +19,7 @@ import javax.persistence.*;
 public class RealEstateAndSupermarket extends BaseEntity{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NonNull
@@ -31,7 +31,7 @@ public class RealEstateAndSupermarket extends BaseEntity{
 
     public RealEstateAndSupermarket updateEntity(RealEstateInfo realEstateInfo, RealEstateInfo.Supermarket supermarket) {
         setDistance(supermarket.getDistance());
-        setRealEstate(realEstateInfo.getName());
+        setRealEstate(realEstateInfo.combineNameAndAddress());
         setSupermarket(supermarket.getPlaceName());
 
         return this;
