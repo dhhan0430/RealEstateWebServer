@@ -1,5 +1,3 @@
-# dhhan0430.RealEstateWebServer
-
 ## Description
 특정 지역 부동산 매물들의 현재 시세와 각 매물의 주변 편의 시설 정보들을 함께 제공해주는 웹 서비스 개발.
 
