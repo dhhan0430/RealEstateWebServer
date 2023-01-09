@@ -1,7 +1,0 @@
-package com.fastcampus.jpa.bookmanager2.repository;
-
-import com.fastcampus.jpa.bookmanager2.domain.Publisher;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface PublisherRepository extends JpaRepository<Publisher, Long> {
-}

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.example.service.ToDoServiceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2022-04-16T08:49:54" hostname="donghee-X570-AORUS-ELITE" time="0.267">
-  <properties/>
-  <testcase name="searchById()" classname="org.example.service.ToDoServiceTest" time="0.26"/>
-  <testcase name="searchByIdFailed()" classname="org.example.service.ToDoServiceTest" time="0.002"/>
-  <testcase name="add()" classname="org.example.service.ToDoServiceTest" time="0.003"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
