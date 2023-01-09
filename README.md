@@ -23,10 +23,10 @@ Linux / IntelliJ
 1. 소스 코드 빌드
 2. DataSources and Drivers 설정 (MySQL DB 설정)
 3. RealEstate/src/main/resources/application.yml 수정
-  3-1. Date -> Year, Month (검색하고자 하는 매물 거래일자 설정)
-  3-2. 국토교통부(Molit) open api 신청(아파트매매 실거래자료, 연립다세대 매매 실거래자료) 후 Molit -> ServiceKey 작성
-  3-3. KakaoMap open api 신청 후 KakaoMap -> Authorization 작성
-  3-4. spring -> datasource -> password 설정
+  -  Date -> Year, Month (검색하고자 하는 매물 거래일자 설정)
+  - 국토교통부(Molit) open api 신청(아파트매매 실거래자료, 연립다세대 매매 실거래자료) 후 Molit -> ServiceKey 작성
+  - KakaoMap open api 신청 후 KakaoMap -> Authorization 작성
+  - spring -> datasource -> password 설정
 4. Talend API 다운로드
 5. 스프링 서버 부팅
 6. 튜토리얼 동영상(RealEstateWebServer_Tutorial.mp4) 참고하여 서버 제공 기능 사용
