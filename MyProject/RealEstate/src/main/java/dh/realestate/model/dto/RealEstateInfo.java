@@ -139,7 +139,4 @@ public class RealEstateInfo implements Comparable<RealEstateInfo> {
         }
     }
 
-
-
-
 }

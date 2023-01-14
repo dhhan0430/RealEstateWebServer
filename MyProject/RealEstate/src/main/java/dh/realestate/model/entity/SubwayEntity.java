@@ -29,8 +29,8 @@ public class SubwayEntity extends BaseEntity {
     private String placeUrl;
     //private String distance;
 
-    @OneToMany
-    @JoinColumn(name = "subway_id")
+    @OneToMany(mappedBy = "subwayEntity")
+    //@JoinColumn(name = "subway_id")
     private List<RealEstateAndSubway> realEstateAndSubways = new ArrayList<>();
 
     public void addRealEstateAndSubways(RealEstateAndSubway... realEstateAndSubways) {

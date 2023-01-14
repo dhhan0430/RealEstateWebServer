@@ -32,11 +32,11 @@ public class RealEstateEntity extends BaseEntity {
     private double areaForExclusiveUse;     // size of area
     private String marketPrice;             // current market price
     private int buildYear;                  // year of construction
-    @OneToMany
-    @JoinColumn(name = "real_estate_id") // 이렇게 해야 mapping table이 안 생긴다.
+    @OneToMany(mappedBy = "realEstateEntity")
+    //@JoinColumn(name = "real_estate_id") // 이렇게 해야 mapping table이 안 생긴다.
     private List<RealEstateAndSubway> realEstateAndSubways = new ArrayList<>(); // list of subway line nearby
-    @OneToMany
-    @JoinColumn(name = "real_estate_id") // 이렇게 해야 mapping table이 안 생긴다.
+    @OneToMany(mappedBy = "realEstateEntity")
+    //@JoinColumn(name = "real_estate_id") // 이렇게 해야 mapping table이 안 생긴다.
     private List<RealEstateAndSupermarket> realEstateAndSupermarkets = new ArrayList<>(); // list of supermarket nearby
 
     public void addRealEstateAndSubways(RealEstateAndSubway... realEstateAndSubways) {

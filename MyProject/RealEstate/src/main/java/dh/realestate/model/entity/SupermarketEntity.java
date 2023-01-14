@@ -29,8 +29,8 @@ public class SupermarketEntity extends BaseEntity {
     private String placeUrl;
     //private String distance;
 
-    @OneToMany
-    @JoinColumn(name = "supermarket_id")
+    @OneToMany(mappedBy = "supermarketEntity")
+    //@JoinColumn(name = "supermarket_id")
     private List<RealEstateAndSupermarket> realEstateAndSupermarkets = new ArrayList<>();
 
     public void addRealEstateAndSupermarkets(RealEstateAndSupermarket... realEstateAndSupermarkets) {

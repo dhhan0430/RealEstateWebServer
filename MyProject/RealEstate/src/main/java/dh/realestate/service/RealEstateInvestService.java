@@ -170,14 +170,15 @@ public class RealEstateInvestService {
             saveAllRealEstateAndSupermarket(realEstateInfo, realEstateEntity);
         }
 
-        return realEstateRepository.save(realEstateEntity).toDto();
+        //return realEstateRepository.save(realEstateEntity).toDto();
+        return realEstateEntity.toDto();
     }
 
     public void saveAllRealEstateAndSubway(
             RealEstateInfo realEstateInfo, RealEstateEntity realEstateEntity) {
         IdGenerator<SubwayEntity, Long> swIdGenerator = new IdGenerator<>();
         swIdGenerator.setJpaRepository(subwayRepository);
-        List<SubwayEntity> subwayEntityList = new ArrayList<>();
+        //List<SubwayEntity> subwayEntityList = new ArrayList<>();
 
         realEstateInfo.getSubways().stream()
                 .filter(
@@ -191,7 +192,7 @@ public class RealEstateInvestService {
                                     );
                             subwayEntity.updateEntity(sw);
                             associateRealEstateWithSubway(realEstateEntity, subwayEntity, sw);
-                            subwayEntityList.add(subwayEntity);
+                            //subwayEntityList.add(subwayEntity);
                         }
                 );
         realEstateInfo.getSubways().stream()
@@ -204,11 +205,11 @@ public class RealEstateInvestService {
                             subwayEntity.setId(swIdGenerator.generateId());
                             subwayEntity = subwayRepository.save(subwayEntity);
                             associateRealEstateWithSubway(realEstateEntity, subwayEntity, sw);
-                            subwayEntityList.add(subwayEntity);
+                            //subwayEntityList.add(subwayEntity);
                         }
                 );
 
-        subwayRepository.saveAll(subwayEntityList);
+        //subwayRepository.saveAll(subwayEntityList);
     }
 
     public void associateRealEstateWithSubway(RealEstateEntity realEstateEntity,
@@ -234,7 +235,7 @@ public class RealEstateInvestService {
             RealEstateInfo realEstateInfo, RealEstateEntity realEstateEntity) {
         IdGenerator<SupermarketEntity, Long> mtIdGenerator = new IdGenerator<>();
         mtIdGenerator.setJpaRepository(supermarketRepository);
-        List<SupermarketEntity> supermarketEntityList = new ArrayList<>();
+        //List<SupermarketEntity> supermarketEntityList = new ArrayList<>();
 
         realEstateInfo.getSupermarkets().stream()
                 .filter(
@@ -248,7 +249,7 @@ public class RealEstateInvestService {
                                     );
                             supermarketEntity.updateEntity(mt);
                             associateRealEstateWithSupermarket(realEstateEntity, supermarketEntity, mt);
-                            supermarketEntityList.add(supermarketEntity);
+                            //supermarketEntityList.add(supermarketEntity);
                         }
                 );
         realEstateInfo.getSupermarkets().stream()
@@ -262,11 +263,11 @@ public class RealEstateInvestService {
                             supermarketEntity.setId(mtIdGenerator.generateId());
                             supermarketEntity = supermarketRepository.save(supermarketEntity);
                             associateRealEstateWithSupermarket(realEstateEntity, supermarketEntity, mt);
-                            supermarketEntityList.add(supermarketEntity);
+                            //supermarketEntityList.add(supermarketEntity);
                         }
                 );
 
-        supermarketRepository.saveAll(supermarketEntityList);
+        //supermarketRepository.saveAll(supermarketEntityList);
     }
 
     public void associateRealEstateWithSupermarket(RealEstateEntity realEstateEntity,
@@ -300,7 +301,7 @@ public class RealEstateInvestService {
         updateRealEstateAndSubway(realEstateInfo, realEstateEntity);
         updateRealEstateAndSupermarket(realEstateInfo, realEstateEntity);
 
-        realEstateRepository.save(realEstateEntity);
+        //realEstateRepository.save(realEstateEntity);
         return realEstateEntity.toDto();
     }
 
@@ -317,13 +318,15 @@ public class RealEstateInvestService {
                 var subwayEntity = resw.getSubwayEntity();
                 // 업데이트 하려는 real_estate가 이미 해당 subway를 소유하고 있을 때,
                 if (sw.equalsTo(subwayEntity)) {
-                    subwayEntity = subwayRepository.findByPlaceNameAndAddressName(
-                            subwayEntity.getPlaceName(), subwayEntity.getAddressName());
-                    subwayRepository.save(subwayEntity.updateEntity(sw));
+                    //subwayEntity = subwayRepository.findByPlaceNameAndAddressName(
+                    //        subwayEntity.getPlaceName(), subwayEntity.getAddressName());
+                    //subwayRepository.save(subwayEntity.updateEntity(sw));
+                    subwayEntity.updateEntity(sw);
 
-                    resw = realEstateAndSubwayRepository.findByRealEstateAndSubway(
-                            realEstateInfo.combineNameAndAddress(), sw.getPlaceName());
-                    realEstateAndSubwayRepository.save(resw.updateEntity(realEstateInfo, sw));
+                    //resw = realEstateAndSubwayRepository.findByRealEstateAndSubway(
+                    //        realEstateInfo.combineNameAndAddress(), sw.getPlaceName());
+                    //realEstateAndSubwayRepository.save(resw.updateEntity(realEstateInfo, sw));
+                    resw.updateEntity(realEstateInfo, sw);
 
                     find = true;
                     deleteRealEstateAndSubwayList.remove(resw);
@@ -343,13 +346,13 @@ public class RealEstateInvestService {
                 }
 
                 associateRealEstateWithSubway(realEstateEntity, subwayEntity, sw);
-                subwayRepository.save(subwayEntity);
+                //subwayRepository.save(subwayEntity);
             }
         }
 
         // 업데이트 목록에 없는 subway들을 제거
         Iterator reswIterator = deleteRealEstateAndSubwayList.iterator();
-        while(reswIterator.hasNext()) {
+        while (reswIterator.hasNext()) {
             deleteRealEstateAndSubway(reswIterator, false);
         }
 
@@ -368,13 +371,15 @@ public class RealEstateInvestService {
                 var supermarketEntity = remt.getSupermarketEntity();
                 // 업데이트 하려는 real_estate가 이미 해당 supermarket를 소유하고 있을 때,
                 if (mt.equalsTo(supermarketEntity)) {
-                    supermarketEntity = supermarketRepository.findByPlaceNameAndAddressName(
-                            supermarketEntity.getPlaceName(), supermarketEntity.getAddressName());
-                    supermarketRepository.save(supermarketEntity.updateEntity(mt));
+                    //supermarketEntity = supermarketRepository.findByPlaceNameAndAddressName(
+                    //        supermarketEntity.getPlaceName(), supermarketEntity.getAddressName());
+                    //supermarketRepository.save(supermarketEntity.updateEntity(mt));
+                    supermarketEntity.updateEntity(mt);
 
-                    remt = realEstateAndSupermarketRepository.findByRealEstateAndSupermarket(
-                            realEstateInfo.combineNameAndAddress(), mt.getPlaceName());
-                    realEstateAndSupermarketRepository.save(remt.updateEntity(realEstateInfo, mt));
+                    //remt = realEstateAndSupermarketRepository.findByRealEstateAndSupermarket(
+                    //        realEstateInfo.combineNameAndAddress(), mt.getPlaceName());
+                    //realEstateAndSupermarketRepository.save(remt.updateEntity(realEstateInfo, mt));
+                    remt.updateEntity(realEstateInfo, mt);
 
                     find = true;
                     deleteRealEstateAndSupermarketList.remove(remt);
@@ -394,17 +399,18 @@ public class RealEstateInvestService {
                 }
 
                 associateRealEstateWithSupermarket(realEstateEntity, supermarketEntity, mt);
-                supermarketRepository.save(supermarketEntity);
+                //supermarketRepository.save(supermarketEntity);
             }
         }
 
         // 업데이트 목록에 없는 supermarket들을 제거
         Iterator remtIterator = deleteRealEstateAndSupermarketList.iterator();
-        while(remtIterator.hasNext()) {
+        while (remtIterator.hasNext()) {
             deleteRealEstateAndSupermarket(remtIterator, false);
         }
     }
 
+    @Transactional
     public List<RealEstateInfo> findList() {
         List<RealEstateInfo> realEstateInfoList = new ArrayList<>();
         realEstateRepository.findAll().forEach(ent -> realEstateInfoList.add(ent.toDto()));
