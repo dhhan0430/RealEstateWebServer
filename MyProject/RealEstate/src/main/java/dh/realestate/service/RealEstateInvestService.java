@@ -181,29 +181,21 @@ public class RealEstateInvestService {
         //List<SubwayEntity> subwayEntityList = new ArrayList<>();
 
         realEstateInfo.getSubways().stream()
-                .filter(
-                        sw -> subwayRepository.findByPlaceNameAndAddressName(
-                                sw.getPlaceName(), sw.getAddressName()) != null
-                ).forEach(
+                .forEach(
                         sw -> {
                             var subwayEntity =
                                     subwayRepository.findByPlaceNameAndAddressName(
                                             sw.getPlaceName(), sw.getAddressName()
                                     );
-                            subwayEntity.updateEntity(sw);
-                            associateRealEstateWithSubway(realEstateEntity, subwayEntity, sw);
-                            //subwayEntityList.add(subwayEntity);
-                        }
-                );
-        realEstateInfo.getSubways().stream()
-                .filter(
-                        sw -> subwayRepository.findByPlaceNameAndAddressName(
-                                sw.getPlaceName(), sw.getAddressName()) == null
-                ).forEach(
-                        sw -> {
-                            var subwayEntity = sw.toEntity();
-                            subwayEntity.setId(swIdGenerator.generateId());
-                            subwayEntity = subwayRepository.save(subwayEntity);
+
+                            if (subwayEntity != null) {
+                                subwayEntity.updateEntity(sw);
+                            } else {
+                                subwayEntity = sw.toEntity();
+                                subwayEntity.setId(swIdGenerator.generateId());
+                                subwayEntity = subwayRepository.save(subwayEntity);
+                            }
+
                             associateRealEstateWithSubway(realEstateEntity, subwayEntity, sw);
                             //subwayEntityList.add(subwayEntity);
                         }
@@ -238,30 +230,21 @@ public class RealEstateInvestService {
         //List<SupermarketEntity> supermarketEntityList = new ArrayList<>();
 
         realEstateInfo.getSupermarkets().stream()
-                .filter(
-                        mt -> supermarketRepository.findByPlaceNameAndAddressName(
-                                mt.getPlaceName(), mt.getAddressName()) != null
-                ).forEach(
+                .forEach(
                         mt -> {
                             var supermarketEntity =
                                     supermarketRepository.findByPlaceNameAndAddressName(
                                             mt.getPlaceName(), mt.getAddressName()
                                     );
-                            supermarketEntity.updateEntity(mt);
-                            associateRealEstateWithSupermarket(realEstateEntity, supermarketEntity, mt);
-                            //supermarketEntityList.add(supermarketEntity);
-                        }
-                );
-        realEstateInfo.getSupermarkets().stream()
-                .filter(
-                        mt -> supermarketRepository.findByPlaceNameAndAddressName(
-                                mt.getPlaceName(), mt.getAddressName()) == null
 
-                ).forEach(
-                        mt -> {
-                            var supermarketEntity = mt.toEntity();
-                            supermarketEntity.setId(mtIdGenerator.generateId());
-                            supermarketEntity = supermarketRepository.save(supermarketEntity);
+                            if (supermarketEntity != null) {
+                                supermarketEntity.updateEntity(mt);
+                            } else {
+                                supermarketEntity = mt.toEntity();
+                                supermarketEntity.setId(mtIdGenerator.generateId());
+                                supermarketEntity = supermarketRepository.save(supermarketEntity);
+                            }
+
                             associateRealEstateWithSupermarket(realEstateEntity, supermarketEntity, mt);
                             //supermarketEntityList.add(supermarketEntity);
                         }
