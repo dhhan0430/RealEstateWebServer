@@ -19,7 +19,7 @@ public class ApiController {
 
     private final RealEstateInvestService realEstateInvestService;
 
-    @GetMapping("/search")
+    @GetMapping("/properties")
     public RealEstateList search(@RequestParam String region,
                                  @RequestParam String type,
                                  @RequestParam(name = "low_price") Integer lowPrice,
@@ -32,7 +32,7 @@ public class ApiController {
                 region, type, lowPrice, highPrice, lowYear, highYear);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public RealEstateInfo add(@RequestBody RealEstateInfo realEstateInfo) {
 
         log.info("{}", realEstateInfo);
@@ -40,7 +40,7 @@ public class ApiController {
         return realEstateInvestService.add(realEstateInfo);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{id}")
     public RealEstateInfo update(@RequestBody RealEstateInfo realEstateInfo) {
 
         log.info("{}", realEstateInfo);
@@ -48,13 +48,13 @@ public class ApiController {
         return realEstateInvestService.update(realEstateInfo);
     }
 
-    @GetMapping("/find/all")
+    @GetMapping("/list")
     public List<RealEstateInfo> findList() {
 
         return realEstateInvestService.findList();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public RealEstateInfo delete(@PathVariable Long id) {
 
         log.info("{}", id);
@@ -62,7 +62,7 @@ public class ApiController {
         return realEstateInvestService.delete(id);
     }
 
-    @DeleteMapping("/delete/all")
+    @DeleteMapping("/all")
     public void deleteAll() {
 
         realEstateInvestService.deleteAll();
